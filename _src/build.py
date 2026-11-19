@@ -411,7 +411,7 @@ FONTS = {
              ("Archivo:wght@700;800", '"Archivo",Arial,sans-serif', _T % ("-.02em", "800", "2.2rem,5.4vw,3.8rem", "1.04", "1.25rem")),
              ("Bitter:wght@600;700", '"Bitter",Georgia,serif', _T % ("-.01em", "700", "2.1rem,5vw,3.5rem", "1.1", "1.25rem")),
              ("Sora:wght@600;700", '"Sora",Arial,sans-serif', _T % ("-.03em", "700", "2rem,4.8vw,3.3rem", "1.1", "1.2rem"))],
-    "soft": [("Playfair+Display:wght@600;700", '"Playfair Display",Georgia,serif', _T % ("0", "700", "2.3rem,6vw,4rem", "1.08", "1.3rem")),
+    "soft": [("EB+Garamond:wght@600;700", '"EB Garamond",Georgia,serif', _T % ("0", "700", "2.5rem,6.2vw,4.2rem", "1.08", "1.3rem")),
              ("Fraunces:wght@500;600", '"Fraunces",Georgia,serif', _T % ("-.01em", "600", "2.3rem,5.8vw,3.9rem", "1.06", "1.3rem")),
              ("DM+Serif+Display", '"DM Serif Display",Georgia,serif', _T % ("0", "400", "2.4rem,6vw,4.1rem", "1.06", "1.35rem")),
              ("Lora:wght@600;700", '"Lora",Georgia,serif', _T % ("-.005em", "700", "2.2rem,5.4vw,3.7rem", "1.1", "1.3rem"))],
@@ -467,16 +467,16 @@ MIRROR = {"klasika": ('@media(min-width:901px){.hero .wrap{grid-template-columns
 # services as a list with dividers instead of cards
 ROWS = ('.cards{display:block;border-top:1px solid var(--line)}'
         '.cards li{display:grid;grid-template-columns:34px minmax(0,1fr) minmax(0,1.3fr);gap:6px 22px;align-items:center;padding:20px 4px;background:none;border:0;'
-        'border-bottom:1px solid var(--line);border-radius:0}.cards .ico,.cards p{margin:0}'
+        'border-bottom:1px solid var(--line);border-radius:0}.cards .ico{grid-row:auto}.cards .ico,.cards p{margin:0}'
         '.cards .more{display:flex;margin-top:22px;padding:24px;border-radius:var(--r);background:var(--band)}.cards .more:hover{translate:none}'
         '@media(max-width:640px){.cards li{grid-template-columns:34px 1fr}.cards li p{grid-column:2}}')
-DESIGNS_FOR = {"tech": ["klasika", "foto", "ramis", "zimejums", "gaiss"], "soft": ["centrs", "gaiss", "foto", "ramis", "zimejums"],
+DESIGNS_FOR = {"tech": ["klasika", "foto", "ramis", "zimejums", "gaiss"], "soft": ["gaiss", "foto", "ramis", "zimejums", "klasika"],
                "clean": ["gaiss", "ramis", "foto", "zimejums", "klasika"]}
 # free stock photos in assets/foto/<set>-1..3.jpg, shown as examples until the owner sends their own
 PHOTOSET = dict.fromkeys(["auto", "riepas", "virsbuve", "stikli", "gaze", "karbas", "sture", "dizelis", "prets"], "auto")
 PHOTOSET.update(meistars="meistars", apkure="meistars", jumti="jumti", buve="buve", elektro="elektro", zobi="zobi", ziedi="ziedi", kafe="kafe", vet="vet")
 KEEP_LOOK = {"autoserviss", "bergs-serviss", "rem-sport"}  # pages already sent out keep their colours and layout
-GENERIC_LOOK = {"buvfirma": ("ramis", "jumti"), "ziedu-salons": ("centrs", "ziedi"), "kafejnica": ("foto", "kafe"), "zobarstnieciba": ("gaiss", "zobi"),
+GENERIC_LOOK = {"buvfirma": ("ramis", "jumti"), "ziedu-salons": ("gaiss", "ziedi"), "kafejnica": ("foto", "kafe"), "zobarstnieciba": ("gaiss", "zobi"),
                 "frizetava": ("zimejums", None), "veterinara-klinika": ("foto", "vet"), "apbedisanas-birojs": ("klasika", None)}
 
 
