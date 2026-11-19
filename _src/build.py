@@ -482,8 +482,10 @@ DESIGNS_FOR = {"tech": ["klasika", "foto", "ramis", "zimejums", "gaiss"], "soft"
 PHOTOSET = dict.fromkeys(["auto", "riepas", "virsbuve", "stikli", "gaze", "karbas", "sture", "dizelis", "prets"], "auto")
 PHOTOSET.update(meistars="meistars", apkure="meistars", jumti="jumti", buve="buve", elektro="elektro", zobi="zobi", ziedi="ziedi", kafe="kafe", vet="vet")
 KEEP_LOOK = {"autoserviss", "bergs-serviss", "rem-sport"}  # pages already sent out keep their colours and layout
-GENERIC_LOOK = {"buvfirma": ("ramis", "jumti"), "ziedu-salons": ("gaiss", "ziedi"), "kafejnica": ("foto", "kafe"), "zobarstnieciba": ("gaiss", "zobi"),
-                "frizetava": ("zimejums", None), "veterinara-klinika": ("foto", "vet"), "apbedisanas-birojs": ("klasika", None)}
+# design, photo set, whole-page skin: the portfolio shows these side by side, so they span all three page styles
+GENERIC_LOOK = {"buvfirma": ("ramis", "jumti", "bloki"), "ziedu-salons": ("gaiss", "ziedi", "papirs"), "kafejnica": ("foto", "kafe", None),
+                "zobarstnieciba": ("gaiss", "zobi", "papirs"), "frizetava": ("zimejums", None, "bloki"), "veterinara-klinika": ("foto", "vet", None),
+                "apbedisanas-birojs": ("klasika", None, "papirs")}
 FORCE_DESIGN = {"jumtu-serviss": "ramis"}  # override hash pick when two businesses would land on the same design
 
 # --variants: extra variants restyle the whole page, not just the hero, so the owner sees genuinely different sites
@@ -548,7 +550,7 @@ SKIN_CSS = {
         '.btn{border-radius:0;border:2px solid var(--edge);box-shadow:4px 4px 0 var(--edge);transition:translate .15s,box-shadow .15s,background .2s}'
         '.btn.primary{background:var(--signal);color:var(--on-signal)}.btn.primary:hover,.btn.ghost:hover{translate:2px 2px;box-shadow:2px 2px 0 var(--edge)}'
         '.btn.ghost{background:var(--surface);color:var(--ink)}.hero .btn.ghost{background:transparent;color:inherit}'
-        '.hero h1{font-size:clamp(2.6rem,8vw,5.6rem);line-height:.92}.hero::after{display:block;height:14px}'
+        '.hero h1{font-size:clamp(2.6rem,6.4vw,5.6rem);line-height:.92;overflow-wrap:normal}.hero::after{display:block;height:14px}'
         '.notice{border-left-width:6px}'
         '.facts ul{border:2px solid var(--edge);box-shadow:6px 6px 0 var(--edge);border-radius:0}.facts li+li{border-left:2px solid var(--edge)}'
         '.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:22px}'
@@ -587,7 +589,7 @@ def look(slug, prof, vkey, generic, variant=0):
     if slug in KEEP_LOOK:
         design, si, photos = "klasika", None, None
     elif generic:
-        design, photos = GENERIC_LOOK[slug]
+        design, photos, skin = GENERIC_LOOK[slug]
     else:
         options = [d for d in DESIGNS_FOR[tone] if photos or d in ("klasika", "zimejums")]
         design = FORCE_DESIGN.get(slug) or options[pick(slug, "d43", len(options))]
