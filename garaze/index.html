@@ -157,9 +157,10 @@ a.phone svg { animation: ring 6s 3s infinite; transform-origin: 50% 60%; }
 .prices tr:hover { background: rgb(127 127 127 / .07); }
 
 .alt { background: var(--surface); border-block: 1px solid var(--line); }
-.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin: 40px 0 0; padding: 0; list-style: none; counter-reset: s; }
-.steps li { counter-increment: s; border-top: 2px solid var(--signal); padding-top: 18px; }
-.steps li::before { content: "0" counter(s); display: block; font: 700 1.5rem/1 var(--display); color: var(--signal); margin-bottom: 12px; }
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin: 40px 0 0; padding: 0; list-style: none; }
+.steps li { border-top: 2px solid var(--signal); padding-top: 18px; }
+.steps .ico { display: block; margin-bottom: 14px; }
+.steps .ico svg { width: 26px; height: 26px; stroke-width: 1.5; color: var(--signal); }
 .steps h3 { margin: 0 0 4px; }
 .steps p { color: var(--muted); }
 
@@ -287,7 +288,7 @@ footer p { opacity: .7; max-width: 46em; }
   <symbol id="chat" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></symbol>
 </svg>
 
-<div class="demo-note"><div class="wrap"><span>Šis paraugs ir sagatavots tieši uzņēmumam «Garaze». Adrese, tālrunis un darba laiks ir no publiskā uzņēmumu kataloga. Teksti un cenas ir piemēri, tos nomainīšu pret jūsējiem.</span></div></div>
+<div class="demo-note"><div class="wrap"><span>Šis paraugs ir sagatavots tieši uzņēmumam «Garaze». Adrese, tālrunis un darba laiks ir no publiskā uzņēmumu kataloga. Teksti, cenas un foto ir piemēri, tos nomainīšu pret jūsējiem.</span></div></div>
 
 <section class="owner"><div class="wrap"><div class="card">
   <p class="tag">Tikai jums. Klienti šo daļu neredzēs.</p>
@@ -395,9 +396,9 @@ footer p { opacity: .7; max-width: 46em; }
   <div class="wrap">
     <h2 class="rv">Kā tas notiek</h2>
     <ol class="steps">
-      <li><h3>Piesakieties</h3><p>Zvaniet vai aizpildiet pieteikumu. Atbildam tajā pašā darba dienā un vienojamies par laiku.</p></li>
-      <li><h3>Saņemiet tāmi</h3><p>Apskatām auto, izskaidrojam, kas jādara, un nosaucam cenu. Lēmums paliek jūsu ziņā.</p></li>
-      <li><h3>Saņemiet auto</h3><p>Paziņojam, kad auto gatavs. Rēķinā ir tas pats, kas tāmē.</p></li>
+      <li><span class="ico"><svg class="i"><use href="#phone"/></svg></span><h3>Piesakieties</h3><p>Zvaniet vai aizpildiet pieteikumu. Atbildam tajā pašā darba dienā un vienojamies par laiku.</p></li>
+      <li><span class="ico"><svg class="i"><use href="#doc"/></svg></span><h3>Saņemiet tāmi</h3><p>Apskatām auto, izskaidrojam, kas jādara, un nosaucam cenu. Lēmums paliek jūsu ziņā.</p></li>
+      <li><span class="ico"><svg class="i"><use href="#check"/></svg></span><h3>Saņemiet auto</h3><p>Paziņojam, kad auto gatavs. Rēķinā ir tas pats, kas tāmē.</p></li>
     </ol>
     <div class="shots" data-stagger aria-label="Vieta fotogrāfijām">
       <figure><img src="../assets/foto/auto-1-s.jpg" alt="" loading="lazy"></figure>
@@ -447,7 +448,7 @@ footer p { opacity: .7; max-width: 46em; }
 
 <footer><div class="wrap">
   <span class="brand">Garaze</span>
-  <p>Šī lapa ir paraugs, ko sagatavoja Raivo Harkovs. Tā nav uzņēmuma oficiālā mājaslapa, un teksti, cenas, foto un kontakti ir piemēri.</p>
+  <p>Šī lapa ir paraugs, ko sagatavoja Raivo Harkovs. Tā nav uzņēmuma oficiālā mājaslapa. Kontakti ir no publiskā uzņēmumu kataloga, teksti, cenas un foto ir piemēri.</p>
 </div></footer>
 
 <div class="bar">

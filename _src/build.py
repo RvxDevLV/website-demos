@@ -193,9 +193,15 @@ def make_live(page, name, cfg, out):
         files["sitemap.xml"] = (f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
                                 f'  <url><loc>https://{cfg["domain"]}/</loc></url>\n</urlset>\n')
     return page, files
-WANT = {a for a in sys.argv[1:] if not a.startswith("--")}
-PREVIEW = "--preview" in sys.argv  # privats/preview/<slug>/, nothing is published
-LIVE = "--live" in sys.argv  # build the client's real site into ../klienti/<slug>/ (see privats/go-live.html)
+_args = sys.argv[1:]
+VARIANTS_N = 1
+if "--variants" in _args:
+    _vi = _args.index("--variants")
+    VARIANTS_N = int(_args[_vi + 1])
+    _args = _args[:_vi] + _args[_vi + 2:]
+WANT = {a for a in _args if not a.startswith("--")}
+PREVIEW = "--preview" in _args  # privats/preview/<slug>/, nothing is published
+LIVE = "--live" in _args  # build the client's real site into ../klienti/<slug>/ (see privats/go-live.html)
 _LIVECFG = PRIV / "live.json"
 LIVECFG = json.loads(_LIVECFG.read_text(encoding="utf-8-sig")) if _LIVECFG.exists() else {}
 assert not LIVE or WANT, "--live needs a business slug"
@@ -478,29 +484,135 @@ PHOTOSET.update(meistars="meistars", apkure="meistars", jumti="jumti", buve="buv
 KEEP_LOOK = {"autoserviss", "bergs-serviss", "rem-sport"}  # pages already sent out keep their colours and layout
 GENERIC_LOOK = {"buvfirma": ("ramis", "jumti"), "ziedu-salons": ("gaiss", "ziedi"), "kafejnica": ("foto", "kafe"), "zobarstnieciba": ("gaiss", "zobi"),
                 "frizetava": ("zimejums", None), "veterinara-klinika": ("foto", "vet"), "apbedisanas-birojs": ("klasika", None)}
+FORCE_DESIGN = {"jumtu-serviss": "ramis"}  # override hash pick when two businesses would land on the same design
+
+# --variants: extra variants restyle the whole page, not just the hero, so the owner sees genuinely different sites
+SKINS = ["papirs", "bloki"]
+SKIN_FONTS = {"papirs": [FONTS["soft"][0], FONTS["soft"][1], FONTS["soft"][2], FONTS["soft"][3], FONTS["tech"][2]],
+              "bloki": [FONTS["tech"][1], FONTS["clean"][1], FONTS["clean"][3], FONTS["tech"][3]]}
+SKIN_CSS = {
+    # editorial: light everywhere, magazine-cover hero, ink buttons, numbered lists, thin rules instead of boxes
+    "papirs": (
+        ':root{--r:0}'
+        '.top{background:var(--bg);color:var(--ink);border-bottom:1px solid var(--line)}.top .wrap{min-height:78px}'
+        '.top nav a{opacity:.7}.top nav a::after{background:var(--ink)}'
+        '.phone{background:none;color:var(--ink);padding:4px 0;border-radius:0;border-bottom:2px solid var(--signal)}'
+        '.btn{border-radius:0;border-width:1px}.btn.primary{background:var(--ink);border-color:var(--ink);color:var(--bg)}'
+        '.btn.primary:hover{background:color-mix(in srgb,var(--ink) 82%,var(--signal))}'
+        '.btn.ghost{border:0;border-bottom:1px solid currentColor;padding-inline:2px}.btn.ghost:hover{border-color:var(--signal)}'
+        'h1,h2{text-transform:none;letter-spacing:-.02em}h2{font-size:clamp(2.1rem,5vw,3.4rem)}'
+        '.hero{background:var(--bg);color:var(--ink)}.hero::before{display:none}'
+        '.hero .wrap{grid-template-columns:1fr;gap:44px;padding-block:clamp(48px,7vw,96px) clamp(56px,7vw,88px)}'
+        '.hero .wrap>div{display:grid;grid-template-columns:1fr 1fr;column-gap:56px}.hero .wrap>div>*{grid-column:1/-1}'
+        '.hero h1{font-size:clamp(3rem,9vw,7.2rem);line-height:.94;letter-spacing:-.035em;text-transform:none}'
+        '.hero .wrap>div>.tagline{grid-column:1;grid-row:3;margin-top:30px;font-family:var(--display);font-size:clamp(1.4rem,2.8vw,2rem)}'
+        '.hero .wrap>div>.lead{grid-column:2;grid-row:3;margin-top:34px;opacity:1;color:var(--muted)}'
+        '.hero .place{text-transform:uppercase;letter-spacing:.14em;font-size:.82rem;opacity:1;color:var(--muted)}'
+        '.hero-fig{aspect-ratio:21/8}.hero-fig::before{display:none}.hero-fig img{border-radius:0}.hero .estimate{max-width:520px}'
+        '.notice{border-left-color:var(--ink)}.notice i{color:inherit}'
+        '.facts{margin-top:0}.facts ul{background:none;border:0;border-block:1px solid var(--line);border-radius:0}'
+        '.cards{display:grid;grid-template-columns:1fr 1fr;gap:0 56px;counter-reset:s;border-top:1px solid var(--ink)}'
+        '.cards li{display:block;background:none;border:0;border-bottom:1px solid var(--line);border-radius:0;padding:24px 0 24px 58px;counter-increment:s}'
+        '.cards li::before{content:counter(s,decimal-leading-zero);position:absolute;left:0;top:27px;font:500 .9rem var(--body);color:var(--muted);font-variant-numeric:tabular-nums}'
+        '.cards .ico{display:none}.cards h3{font:600 1.4rem/1.2 var(--display)}'
+        '.cards .more{grid-column:1/-1;background:none;color:inherit;padding-left:0;border-bottom:0}.cards .more::before{content:none}.cards .more p{opacity:1;color:var(--muted)}'
+        '.cards .more a{border-bottom-color:var(--ink)}'
+        '.why{background:var(--surface);color:var(--ink);border-block:1px solid var(--line)}.why .wrap{grid-template-columns:1fr}.why-head{position:static}.why .art{display:none}'
+        '.why ul{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;margin-top:10px}'
+        '.why li,.why li:last-child,.why li:nth-last-child(-n+2){display:block;border:0;border-top:3px solid var(--signal);padding:20px 0 0}'
+        '.why li svg{display:none}.why li h3{font:600 1.25rem/1.25 var(--display)}.why li p{opacity:1;color:var(--muted)}'
+        '.prices{background:none;border:0;border-top:1px solid var(--ink);border-radius:0;padding:0}.prices td:last-child{font-family:var(--display);font-size:1.2rem}'
+        '.estimate{border-radius:0;border-color:var(--line)}'
+        '.alt{background:var(--bg);border-block:0}.steps{gap:0;border-top:1px solid var(--ink)}'
+        '.steps li{border-top:0;border-left:1px solid var(--line);padding:26px 26px 0}.steps li:first-child{border-left:0;padding-left:0}'
+        '.steps .ico svg{color:var(--ink)}.steps h3{font:600 1.3rem/1.25 var(--display)}'
+        '.faq{max-width:none;display:grid;grid-template-columns:.8fr 1.2fr;column-gap:56px;align-items:start}'
+        '.faq h2{grid-column:1;grid-row:1/span 12;position:sticky;top:100px}.faq details{grid-column:2}.faq details:first-of-type{margin-top:0}'
+        '.contact{background:var(--surface);color:var(--ink);border-top:1px solid var(--line)}.contact .info svg{color:var(--ink)}'
+        '.hours{border-top-color:var(--line)}.hours div{border-bottom-color:var(--line)}'
+        '.hours .now{color:var(--ink);text-decoration:underline 3px var(--signal);text-underline-offset:5px}.map{background:var(--bg)}'
+        'form{box-shadow:none;border:1px solid var(--ink);border-radius:0;background:var(--bg)}input,textarea{border-radius:0;background:var(--surface)}form h3{font-weight:600}'
+        '#sent{border-radius:0}footer{background:var(--bg);color:var(--ink);border-top:1px solid var(--ink)}'
+        '.bar{background:var(--bg);color:var(--ink);border-top:1px solid var(--line)}'
+        '@media(max-width:900px){.hero .wrap>div{grid-template-columns:1fr}.hero .wrap>div>.tagline,.hero .wrap>div>.lead{grid-column:1;grid-row:auto}.hero .wrap>div>.lead{margin-top:14px}'
+        '.hero-fig{aspect-ratio:16/10}.why ul{grid-template-columns:1fr 1fr}.faq{grid-template-columns:1fr}.faq h2{grid-row:auto;position:static}'
+        '.faq details{grid-column:1}.faq details:first-of-type{margin-top:26px}}'
+        '@media(max-width:640px){.cards,.why ul{grid-template-columns:1fr}.steps{border-top:0}'
+        '.steps li,.steps li:first-child{border-left:0;border-top:1px solid var(--line);padding:22px 0 0}}'),
+    # bold: thick edges, hard offset shadows, accent-coloured bars and tiles
+    "bloki": (
+        ':root{--r:0;--edge:var(--ink)}.hero,.contact,footer{--edge:var(--on-band)}form,.bar{--edge:var(--ink)}'
+        '.top{background:var(--signal);color:var(--on-signal);border-bottom:2px solid var(--ink)}.top nav a{opacity:1}.top nav a::after{background:var(--on-signal)}'
+        '.phone{background:var(--ink);color:var(--bg);border-radius:0}'
+        'h1,h2{text-transform:uppercase;letter-spacing:-.01em}h2{font-size:clamp(2.2rem,5.5vw,3.6rem);line-height:1}'
+        '.btn{border-radius:0;border:2px solid var(--edge);box-shadow:4px 4px 0 var(--edge);transition:translate .15s,box-shadow .15s,background .2s}'
+        '.btn.primary{background:var(--signal);color:var(--on-signal)}.btn.primary:hover,.btn.ghost:hover{translate:2px 2px;box-shadow:2px 2px 0 var(--edge)}'
+        '.btn.ghost{background:var(--surface);color:var(--ink)}.hero .btn.ghost{background:transparent;color:inherit}'
+        '.hero h1{font-size:clamp(2.6rem,8vw,5.6rem);line-height:.92}.hero::after{display:block;height:14px}'
+        '.notice{border-left-width:6px}'
+        '.facts ul{border:2px solid var(--edge);box-shadow:6px 6px 0 var(--edge);border-radius:0}.facts li+li{border-left:2px solid var(--edge)}'
+        '.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:22px}'
+        '.cards li{display:block;border:2px solid var(--edge);box-shadow:5px 5px 0 var(--edge);border-radius:0;padding:22px}'
+        '.cards li:hover{translate:-2px -2px;box-shadow:7px 7px 0 var(--edge);border-color:var(--edge)}'
+        '.cards .ico{display:grid;place-items:center;width:50px;height:50px;background:var(--signal);border:2px solid var(--edge);margin-bottom:16px;padding:0}'
+        '.cards .ico svg{color:var(--on-signal)}.cards h3{font:700 1.2rem/1.25 var(--display);text-transform:uppercase}'
+        '.cards .more{background:var(--ink);color:var(--bg)}.cards .more a{border-bottom-color:var(--signal)}'
+        '.why{background:var(--signal);color:var(--on-signal)}.why .wrap{grid-template-columns:1fr}.why-head{position:static}.why .art{display:none}'
+        '.why ul{display:grid;grid-template-columns:1fr 1fr;gap:20px}'
+        '.why li,.why li:last-child,.why li:nth-last-child(-n+2){border:2px solid var(--on-signal);padding:22px;background:color-mix(in srgb,var(--on-signal) 6%,transparent)}'
+        '.why li svg{color:var(--on-signal)}.why li p{opacity:.85}.why li h3{text-transform:uppercase;font-weight:700}'
+        '.prices{border:2px solid var(--edge);box-shadow:6px 6px 0 var(--edge);border-radius:0}.prices td{border-bottom-width:2px}'
+        '.prices td:last-child{font:700 1.3rem var(--display)}.estimate{border:2px solid var(--edge);box-shadow:5px 5px 0 var(--edge);border-radius:0}'
+        '.alt{background:var(--bg);border-block:2px solid var(--edge)}.steps{gap:22px}'
+        '.steps li{border:2px solid var(--edge);box-shadow:5px 5px 0 var(--edge);padding:22px;background:var(--surface)}'
+        '.steps .ico{display:grid;place-items:center;width:50px;height:50px;background:var(--signal);border:2px solid var(--edge)}.steps .ico svg{color:var(--on-signal)}'
+        '.steps h3{text-transform:uppercase;font-weight:700}.shots div,.shots figure{border:2px solid var(--edge);border-radius:0}'
+        '.faq details{border:2px solid var(--edge);margin-top:14px;padding:0 18px;background:var(--surface)}'
+        '.faq details:first-of-type{margin-top:26px;border-top:2px solid var(--edge)}.faq details[open]{box-shadow:5px 5px 0 var(--edge)}'
+        '.faq summary::after{color:var(--ink)}.faq details p{padding-right:0}'
+        'form{border:2px solid var(--edge);box-shadow:8px 8px 0 var(--signal);border-radius:0}input,textarea{border:2px solid var(--edge);border-radius:0}'
+        'form h3{text-transform:uppercase}.map{border:2px dashed color-mix(in srgb,var(--on-band) 35%,transparent);border-radius:0}'
+        '#sent{border-radius:0;border:2px solid var(--ink)}footer{border-top:6px solid var(--signal)}'
+        '.bar{background:var(--signal);border-top:2px solid var(--ink)}'
+        '@media(max-width:900px){.facts li+li{border-left:0;border-top:2px solid var(--edge)}.why ul{grid-template-columns:1fr}}'),
+}
 
 
-def look(slug, prof, vkey, generic):
+def look(slug, prof, vkey, generic, variant=0):
     tone, pals = TONE.get(prof, "tech"), PALETTES.get(prof) or PALETTES["auto"]
     photos = PHOTOSET.get(vkey or prof)
     fi = pi = si = 0
     mirror = rows = swap = False
+    skin = None
     if slug in KEEP_LOOK:
         design, si, photos = "klasika", None, None
     elif generic:
         design, photos = GENERIC_LOOK[slug]
     else:
         options = [d for d in DESIGNS_FOR[tone] if photos or d in ("klasika", "zimejums")]
-        design = options[pick(slug, "d43", len(options))]
-        fi, pi, si = pick(slug, "f", len(FONTS[tone])), pick(slug, "p", len(pals)), pick(slug, "s", len(SHAPES[tone]))
-        mirror, rows, swap = pick(slug, "m", 2) == 1, pick(slug, "r", 3) == 0, pick(slug, "o", 2) == 1
+        design = FORCE_DESIGN.get(slug) or options[pick(slug, "d43", len(options))]
+        fi = pick(slug, "f", len(FONTS[tone]))
+        pi = (pick(slug, "p", len(pals)) + variant) % len(pals)
+        si = pick(slug, "s", len(SHAPES[tone]))
+        mirror, rows, swap = pick(slug, "m", 2) == 1, pick(slug, "r", 3) == 0, (pick(slug, "o", 2) + variant) % 2 == 1
+        if variant:
+            skin = SKINS[(variant - 1) % len(SKINS)]
+            if skin == "papirs":
+                design = "gaiss" if photos else "klasika"  # gives the hero-fig markup; the skin lays it out as a cover
+            else:
+                pool = [d for d in ("foto", "ramis", "zimejums") if (photos or d == "zimejums") and d != design] or ["zimejums"]
+                design = pool[pick(slug, "bd", len(pool))]
+            mirror = rows = False
     gf, family, fcss = FONTS[tone][fi]
+    if skin:
+        pool = [f for f in SKIN_FONTS[skin] if f[1] != family]
+        gf, family, fcss = pool[pick(slug, "sf" + skin, len(pool))]
     band, band2, signal, on = pals[pi]
     css = f":root{{--band:{band};--band-2:{band2};--signal:{signal};--on-signal:{on};--display:{family}}}"
     if prof in BG:
         css += f"@media(prefers-color-scheme:light){{:root{{--bg:{BG[prof]}}}}}"
-    css += fcss + (SHAPES[tone][si] if si is not None else "") + DESIGNS[design] + (MIRROR.get(design, "") if mirror else "") + (ROWS if rows else "")
-    first = pick(slug, "foto", 3)
+    css += fcss + (SHAPES[tone][si] if si is not None else "") + DESIGNS[design] + (MIRROR.get(design, "") if mirror else "") + (ROWS if rows else "") + SKIN_CSS.get(skin, "")
+    first = (pick(slug, "foto", 3) + variant) % 3
     return dict(design=design, css=css, gf=gf, swap=swap,
                 photos=[f"{photos}-{(first + i) % 3 + 1}" for i in range(3)] if photos else [])
 
@@ -727,6 +839,59 @@ VARIANTS = {
 PLACEHOLDER = {"buve": "vannas istabas remonts", "meistars": "tek krāns"}  # example in the request form
 
 
+def _build_compare(slug, name, n):
+    """Write a comparison page showing all n design variants side by side."""
+    e = html.escape
+    cards = "".join(
+        f'    <div class="card">\n'
+        f'      <div class="preview"><iframe src="../{e(slug if v == 1 else f"{slug}-{v}")}/" title="{v}. variants" loading="eager"></iframe></div>\n'
+        f'      <div class="card-body">\n'
+        f'        <div class="card-num">{v}. variants</div>\n'
+        f'        <a class="card-link" href="../{e(slug if v == 1 else f"{slug}-{v}")}/" target="_blank">Atvērt pilnekrānā</a>\n'
+        f'      </div>\n'
+        f'    </div>\n'
+        for v in range(1, n + 1)
+    )
+    page = f'''<!doctype html>
+<html lang="lv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Dizaina paraugi — {e(name)}</title>
+  <style>
+    *,*::before,*::after{{box-sizing:border-box;margin:0;padding:0}}
+    body{{font-family:-apple-system,"Segoe UI",sans-serif;background:#f4f3f1;color:#18181a;min-height:100vh}}
+    header{{padding:52px 32px 36px;text-align:center}}
+    .eyebrow{{font-size:.8rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#9a9896;margin-bottom:10px}}
+    h1{{font-size:clamp(1.5rem,4vw,2.25rem);font-weight:700;line-height:1.1;margin-bottom:14px}}
+    .lead{{font-size:.95rem;color:#6b6966;max-width:420px;margin:0 auto}}
+    main{{display:grid;grid-template-columns:repeat({n},1fr);gap:24px;padding:0 32px 56px;max-width:1100px;margin:0 auto;width:100%}}
+    .card{{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.06),0 0 0 1px rgba(0,0,0,.05)}}
+    .preview{{position:relative;aspect-ratio:3/2;overflow:hidden;background:#e8e7e4}}
+    .preview iframe{{position:absolute;top:0;left:0;width:300%;height:300%;transform:scale(.333);transform-origin:top left;pointer-events:none;border:0}}
+    .card-body{{padding:16px 20px 20px}}
+    .card-num{{font-size:.8rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#9a9896;margin-bottom:8px}}
+    .card-link{{display:block;text-align:center;padding:9px 16px;border-radius:7px;background:#18181a;color:#fff;text-decoration:none;font-size:.88rem;font-weight:500}}
+    .card-link:hover{{background:#2e2e30}}
+    @media(max-width:720px){{main{{grid-template-columns:1fr;max-width:420px}}}}
+  </style>
+</head>
+<body>
+  <header>
+    <p class="eyebrow">Mājaslapas paraugs</p>
+    <h1>{e(name)}</h1>
+    <p class="lead">Izvēlieties, kuru dizainu vēlaties. Atbildiet man ar numuru vai nosūtiet saiti.</p>
+  </header>
+  <main>
+{cards}  </main>
+</body>
+</html>'''
+    out = PRIV / "preview" / f"{slug}-izvele"
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "index.html").write_text(page, encoding="utf-8")
+    print("built", f"{slug}-izvele", "(comparison page)")
+
+
 def variant(prof, services):
     hit = lambda rx: sum(bool(re.search(rx, s.lower())) for s in services)
     if prof == "buve" and hit(r"jumt|skārd|notek|dzeg|palodz") * 2 > len(services):
@@ -756,7 +921,6 @@ for slug, name, loc, town, services, term, *rest in SHOPS:
     h1 = re.sub(r"</?em>", "", h1)
     extra = EXTRA.get(prof, {})
     generic = not loc
-    L = look(slug, prof, vkey, generic)
     drawing = art(var.get("art") or ART_BY.get(prof, "car"))
     e = html.escape
     note = (extra.get("generic", "Paraugs autoservisa mājaslapai.") + " Nosaukumu, cenas, foto un kontaktus nomainu pret jūsu."
@@ -788,7 +952,7 @@ for slug, name, loc, town, services, term, *rest in SHOPS:
     }
     page = (TPL
             .replace("{{THEME}}", "")
-            .replace("{{ART}}", "" if L["design"] == "zimejums" else drawing)
+            .replace("{{ART}}", "{{ART}}")
             .replace("{{LOC}}", f" {e(loc)}" if loc else "")
             .replace("{{OWNER}}", owner)
             .replace("{{NAME}}", e(name))
@@ -821,24 +985,33 @@ for slug, name, loc, town, services, term, *rest in SHOPS:
     page = re.sub(r'\n *<ul class="ticks">.*?</ul>', "", page, flags=re.S)
     page = re.sub(r'(<section class="why">.*?<h2[^>]*>)[^<]*(</h2>)', r"\1Kā strādājam\2", page, count=1, flags=re.S)
     page = page.replace('<input id="f-car"', '<input id="f-car" name="Papildu informācija"')
-    page = apply_look(page, L, drawing, "../../../assets/foto/" if PREVIEW else "../assets/foto/")
-    if not generic:  # a business demo does not link to the other samples
-        page = page.replace(' <a href="../">Kas to veidoja un citi paraugi</a>', "").replace(' <a href="../">Par autoru un citi paraugi</a>', "")
+    # apply content changes that are design-independent (same for all variants)
+    _assets = "../../../assets/foto/" if PREVIEW else "../assets/foto/"
     if slug in INFO:
         page = real_info(page, INFO[slug], ldd)
     hrs = INFO.get(slug, {}).get("hours")
     if hrs:
         ldd["openingHours"] = [f'{["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"][int(d)]} {v.replace(".", ":")}' for d, v in hrs.items()]
-    page = page.replace("{{JSONLD}}", "" if generic else
-                        '<script type="application/ld+json">' + json.dumps(ldd, ensure_ascii=False).replace("</", "<\\/") + "</script>\n")
-    if LIVE:
-        out = ROOT.parent / "klienti" / slug
-        out.mkdir(parents=True, exist_ok=True)
-        page, files = make_live(page, name, LIVECFG.get(slug, {}), out)
-        for fn, body in files.items():
-            (out / fn).write_text(body, encoding="utf-8")
-    else:
-        out = PRIV / "preview" / slug if PREVIEW else ROOT / slug
-        out.mkdir(parents=True, exist_ok=True)
-    (out / "index.html").write_text(page, encoding="utf-8")
-    print("built", slug, "(live version in ../klienti)" if LIVE else "(preview only)" if PREVIEW else "")
+    _jsonld = "" if generic else '<script type="application/ld+json">' + json.dumps(ldd, ensure_ascii=False).replace("</", "<\\/") + "</script>\n"
+    _page_base = page
+    for _v in range(VARIANTS_N if PREVIEW else 1):
+        _vslug = f"{slug}-{_v + 1}" if _v > 0 else slug
+        L = look(slug, prof, vkey, generic, _v)
+        page = apply_look(_page_base, L, drawing, _assets)
+        page = page.replace("{{ART}}", "" if L["design"] == "zimejums" else drawing)
+        if not generic:  # a business demo does not link to the other samples
+            page = page.replace(' <a href="../">Kas to veidoja un citi paraugi</a>', "").replace(' <a href="../">Par autoru un citi paraugi</a>', "")
+        page = page.replace("{{JSONLD}}", _jsonld)
+        if LIVE:
+            out = ROOT.parent / "klienti" / slug
+            out.mkdir(parents=True, exist_ok=True)
+            page, files = make_live(page, name, LIVECFG.get(slug, {}), out)
+            for fn, body in files.items():
+                (out / fn).write_text(body, encoding="utf-8")
+        else:
+            out = PRIV / "preview" / _vslug if PREVIEW else ROOT / slug
+            out.mkdir(parents=True, exist_ok=True)
+        (out / "index.html").write_text(page, encoding="utf-8")
+        print("built", _vslug, "(live version in ../klienti)" if LIVE else "(preview only)" if PREVIEW else "")
+    if PREVIEW and VARIANTS_N > 1:
+        _build_compare(slug, name, VARIANTS_N)
