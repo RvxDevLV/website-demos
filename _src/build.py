@@ -420,7 +420,7 @@ FONTS = {
               ("Sora:wght@600;700", '"Sora",Arial,sans-serif', _T % ("-.03em", "700", "2rem,4.8vw,3.3rem", "1.1", "1.2rem")),
               ("Plus+Jakarta+Sans:wght@700;800", '"Plus Jakarta Sans",Arial,sans-serif', _T % ("-.03em", "800", "2.1rem,5.2vw,3.5rem", "1.08", "1.25rem"))],
 }
-SHAPES = {"tech": [":root{--r:0}", ":root{--r:2px}", ":root{--r:4px}"],  # small corners only: big rounding and pill buttons read as AI-made
+SHAPES = {"tech": [":root{--r:0}", ":root{--r:2px}", ":root{--r:4px}"],  # small corners only: big rounding and pill buttons look generic
           "soft": [":root{--r:6px}", ":root{--r:4px}", ":root{--r:6px}"],
           "clean": [":root{--r:2px}", ":root{--r:4px}", ":root{--r:6px}"]}
 _BG = ('.hero-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-3;animation:zoom 16s ease-out both}'
@@ -816,7 +816,7 @@ for slug, name, loc, town, services, term, *rest in SHOPS:
             f"    <details><summary>{q}</summary><p>{a}</p></details>\n" for q, a in extra["faq"]), page, count=1)
     if rest and rest[0] == "evak":
         page = page.replace("Pieteikt vizīti", "Izsaukt evakuatoru")
-    # drop template habits that make pages look machine-made: section labels, tick rows, slogan triplets
+    # drop template habits that make pages look generic: section labels, tick rows, slogan triplets
     page = re.sub(r'\n *<p class="kicker">[^<]*</p>', "", page)
     page = re.sub(r'\n *<ul class="ticks">.*?</ul>', "", page, flags=re.S)
     page = re.sub(r'(<section class="why">.*?<h2[^>]*>)[^<]*(</h2>)', r"\1Kā strādājam\2", page, count=1, flags=re.S)
