@@ -602,7 +602,7 @@ def look(slug, prof, vkey, generic, variant=0):
             if skin == "papirs":
                 design = "gaiss" if photos else "klasika"  # gives the hero-fig markup; the skin lays it out as a cover
             else:
-                pool = [d for d in ("foto", "ramis", "zimejums") if (photos or d == "zimejums") and d != design] or ["zimejums"]
+                pool = [d for d in ("foto", "ramis", "zimejums") if (photos or d == "zimejums") and d != design] or ["klasika"]
                 design = pool[pick(slug, "bd", len(pool))]
             mirror = rows = False
     gf, family, fcss = FONTS[tone][fi]
@@ -613,7 +613,7 @@ def look(slug, prof, vkey, generic, variant=0):
     css = f":root{{--band:{band};--band-2:{band2};--signal:{signal};--on-signal:{on};--display:{family}}}"
     if prof in BG:
         css += f"@media(prefers-color-scheme:light){{:root{{--bg:{BG[prof]}}}}}"
-    css += fcss + (SHAPES[tone][si] if si is not None else "") + DESIGNS[design] + (MIRROR.get(design, "") if mirror else "") + (ROWS if rows else "") + SKIN_CSS.get(skin, "")
+    css += fcss + (SHAPES[tone][si] if si is not None and not skin else "") + DESIGNS[design] + (MIRROR.get(design, "") if mirror else "") + (ROWS if rows else "") + SKIN_CSS.get(skin, "")
     first = (pick(slug, "foto", 3) + variant) % 3
     return dict(design=design, css=css, gf=gf, swap=swap,
                 photos=[f"{photos}-{(first + i) % 3 + 1}" for i in range(3)] if photos else [])
@@ -953,7 +953,6 @@ for slug, name, loc, town, services, term, *rest in SHOPS:
         "makesOffer": [{"@type": "Offer", "itemOffered": {"@type": "Service", "name": x}} for x in services],
     }
     page = (TPL
-            .replace("{{THEME}}", "")
             .replace("{{ART}}", "{{ART}}")
             .replace("{{LOC}}", f" {e(loc)}" if loc else "")
             .replace("{{OWNER}}", owner)
