@@ -205,6 +205,7 @@ LIVE = "--live" in _args  # build the client's real site into ../klienti/<slug>/
 _LIVECFG = PRIV / "live.json"
 LIVECFG = json.loads(_LIVECFG.read_text(encoding="utf-8-sig")) if _LIVECFG.exists() else {}
 assert not LIVE or WANT, "--live needs a business slug"
+assert PREVIEW or VARIANTS_N == 1, "--variants only works with --preview"
 _unknown = WANT - {s[0] for s in SHOPS}
 assert not _unknown, f"unknown slug: {_unknown}"
 
@@ -607,7 +608,7 @@ def look(slug, prof, vkey, generic, variant=0):
             mirror = rows = False
     gf, family, fcss = FONTS[tone][fi]
     if skin:
-        pool = [f for f in SKIN_FONTS[skin] if f[1] != family]
+        pool = [f for f in SKIN_FONTS[skin] if f[1] != family] or list(SKIN_FONTS[skin])
         gf, family, fcss = pool[pick(slug, "sf" + skin, len(pool))]
     band, band2, signal, on = pals[pi]
     css = f":root{{--band:{band};--band-2:{band2};--signal:{signal};--on-signal:{on};--display:{family}}}"
@@ -953,7 +954,6 @@ for slug, name, loc, town, services, term, *rest in SHOPS:
         "makesOffer": [{"@type": "Offer", "itemOffered": {"@type": "Service", "name": x}} for x in services],
     }
     page = (TPL
-            .replace("{{ART}}", "{{ART}}")
             .replace("{{LOC}}", f" {e(loc)}" if loc else "")
             .replace("{{OWNER}}", owner)
             .replace("{{NAME}}", e(name))
