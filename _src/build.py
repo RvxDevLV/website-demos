@@ -102,12 +102,13 @@ def real_info(page, info, ld):
     return page
 
 
-def self_host_fonts(page, out):
+def self_host_fonts(page, out, shared=None):
     """Download the Google Fonts the page uses into fonts/ so visitors' browsers never contact Google (GDPR)."""
     import urllib.request
     cache = PRIV / "fonts-cache"
     cache.mkdir(exist_ok=True)
-    (out / "fonts").mkdir(exist_ok=True)
+    fdir, ref = (shared, "../assets/fonts/") if shared else (out / "fonts", "fonts/")  # shared: one copy for every sample page
+    fdir.mkdir(parents=True, exist_ok=True)
     ua = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124 Safari/537.36"}
     css_all = []
     for href in re.findall(r'<link rel="stylesheet" href="(https://fonts\.googleapis\.com/[^"]+)">', page):
@@ -117,8 +118,8 @@ def self_host_fonts(page, out):
             f = cache / fn
             if not f.exists():
                 f.write_bytes(urllib.request.urlopen(urllib.request.Request(u, headers=ua), timeout=30).read())
-            (out / "fonts" / fn).write_bytes(f.read_bytes())
-            css = css.replace(u, "fonts/" + fn)
+            (fdir / fn).write_bytes(f.read_bytes())
+            css = css.replace(u, ref + fn)
         css_all.append(css)
     page = re.sub(r'<link rel="preconnect" href="https://fonts\.g[^"]+"( crossorigin)?>\n', "", page)
     page = re.sub(r'<link rel="stylesheet" href="https://fonts\.googleapis\.com/[^"]+">\n?', "", page)
@@ -1137,6 +1138,8 @@ for slug, name, loc, town, services, term, *rest in SHOPS:
         else:
             out = PRIV / "preview" / _vslug if PREVIEW else ROOT / slug
             out.mkdir(parents=True, exist_ok=True)
+            if not PREVIEW:  # published samples: no render-blocking request to Google Fonts
+                page = self_host_fonts(page, out, ROOT / "assets" / "fonts")
         (out / "index.html").write_text(page, encoding="utf-8")
         print("built", _vslug, "(live version in ../klienti)" if LIVE else "(preview only)" if PREVIEW else "")
     if PREVIEW and VARIANTS_N > 1:
