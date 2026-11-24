@@ -39,6 +39,7 @@ p { margin:0; } a { color:inherit; }
 .sub { color:var(--muted); margin-top:12px; max-width:40em; }
 .btn { display:inline-flex; align-items:center; gap:8px; font:700 1.02rem var(--body); padding:13px 22px; border-radius:0; text-decoration:none; border:2px solid var(--ink); background:var(--signal); color:var(--on-signal); transition:background .15s; }
 .btn:hover { background:#ff7a47; } .btn:active { scale:.97; }
+.tests { display:flex; flex-wrap:wrap; gap:12px; margin-top:20px; } .ink .btn { color:var(--on-signal); } .ink .btn.ghost { background:transparent; color:var(--bg); border-color:var(--bg); } .ink .btn.ghost:hover { background:rgb(241 234 217/.14); }
 .more { font-weight:700; text-decoration:none; border-bottom:2px solid currentColor; padding-bottom:1px; }
 .more::after { content:" →"; } .more:hover { border-bottom-color:var(--signal); }
 
@@ -238,7 +239,12 @@ footer { background:var(--ink); color:var(--bg); border-top:1px solid rgb(241 23
       <li style="--f:1"><b data-n="100">100</b><span class="lab">Drošība un kārtība</span></li>
       <li style="--f:1"><b data-n="100">100</b><span class="lab">Atrodamība Google</span></li>
     </ul>
-    <p class="sub">Ja jūs neticat uz vārda, <a href="https://pagespeed.web.dev/analysis?url=https%3A%2F%2Frvxdevlv.github.io%2Fwebsite-demos%2F" target="_blank" rel="noopener">pārbaudiet paši Google PageSpeed</a>. Rezultāts katrā mērījumā var nedaudz atšķirties.</p>
+    <p class="sub">Ja jūs neticat uz vārda, pārbaudiet paši. Pārbaudes atveras jaunā cilnē jau ar šīs lapas adresi. Rezultāts katrā mērījumā var nedaudz atšķirties, un citi rīki var vērtēt stingrāk.</p>
+    <div class="tests">
+      <a class="btn" href="https://pagespeed.web.dev/analysis?url=https%3A%2F%2Frvxdevlv.github.io%2Fwebsite-demos%2F" target="_blank" rel="noopener">Google PageSpeed</a>
+      <a class="btn ghost" href="https://gtmetrix.com/?url=https%3A%2F%2Frvxdevlv.github.io%2Fwebsite-demos%2F" target="_blank" rel="noopener">GTmetrix</a>
+      <a class="btn ghost" href="https://www.webpagetest.org/?url=https%3A%2F%2Frvxdevlv.github.io%2Fwebsite-demos%2F" target="_blank" rel="noopener">WebPageTest</a>
+    </div>
   </div>
 </section>
 
