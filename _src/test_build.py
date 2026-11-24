@@ -1,22 +1,26 @@
 """Checks the built demos. Run: python _src/test_build.py
-1. every published page keeps its sample marks (noindex, sample note) and has no leftover {{placeholder}}
+1. every published page keeps its sample marks (noindex for business demos, indexable for the eight generic samples, sample note) and has no leftover {{placeholder}}
 2. (needs privats/) every business demo builds in 3 variants that really differ, and shows its real phone number
 Step 2 builds into privats/preview/, nothing is published."""
 import json, pathlib, re, runpy, subprocess, sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 PRIV = ROOT / "privats"
+GENERIC = {"autoserviss", "buvfirma", "ziedu-salons", "kafejnica", "zobarstnieciba", "frizetava", "veterinara-klinika", "apbedisanas-birojs"}
 KEEP_LOOK = {"autoserviss", "bergs-serviss", "rem-sport"}  # same list as build.py: these ignore variants
 
 for p in sorted(ROOT.glob("*/index.html")):
     h = p.read_text(encoding="utf-8")
-    assert 'name="robots" content="noindex"' in h, f"{p.parent.name}: noindex missing"
+    if p.parent.name in GENERIC:  # the eight public samples are indexed and say where they live
+        assert "noindex" not in h and f'rel="canonical" href="https://rvxdevlv.github.io/website-demos/{p.parent.name}/"' in h, f"{p.parent.name}: should be indexable with a canonical"
+    else:
+        assert 'name="robots" content="noindex"' in h, f"{p.parent.name}: noindex missing"
     assert "demo-note" in h, f"{p.parent.name}: sample note missing"
     assert "{{" not in h, f"{p.parent.name}: placeholder left"
 
 if PRIV.is_dir():
     mine = [s[0] for s in runpy.run_path(str(PRIV / "shops.py"))["SHOPS"] if (ROOT / s[0] / "index.html").exists() and s[0] not in KEEP_LOOK]
-    subprocess.run([sys.executable, "-X", "utf8", str(ROOT / "_src" / "build.py"), "--preview", "--variants", "3", *mine], check=True, capture_output=True)
+    subprocess.run([sys.executable, "-X", "utf8", str(ROOT / "_src" / "build.py"), "--preview", "--variants", "3", *mine], check=True)  # no capture: a failed build shows its own error
     info = json.loads((PRIV / "info.json").read_text(encoding="utf-8-sig"))
     for s in mine:
         pages = [(PRIV / "preview" / (s if i == 0 else f"{s}-{i + 1}") / "index.html").read_text(encoding="utf-8") for i in range(3)]

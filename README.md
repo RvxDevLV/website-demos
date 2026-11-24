@@ -29,7 +29,7 @@ Katrai nozarei ir savs izskats, teksti un cenrādis. Spiediet uz attēla, lai at
 <tr><td align="center" width="33%"><a href="https://rvxdevlv.github.io/website-demos/veterinara-klinika/"><img src="assets/paraugs-vet.jpg" alt="Veterinārā klīnika"><br><b>Veterinārā klīnika</b></a></td><td align="center" width="33%"><a href="https://rvxdevlv.github.io/website-demos/buvfirma/"><img src="assets/paraugs-buve.jpg" alt="Būvniecība un remonts"><br><b>Būvniecība un remonts</b></a></td><td></td></tr>
 </table>
 
-Ja saņēmāt no manis e-pastu, tajā ir saite uz paraugu, kas sagatavots tieši jūsu uzņēmumam. To redz tikai tie, kam ir saite.
+Ja saņēmāt no manis e-pastu, tajā ir saite uz paraugu, kas sagatavots tieši jūsu uzņēmumam. Šo paraugu redz tikai tie, kam ir saite.
 
 ## Jūs atrod Google
 
@@ -43,7 +43,7 @@ Kad salūst auto, cilvēks telefonā ieraksta “autoserviss” un savu pilsētu
 
 Vietu Google rezultātos neviens godīgi apsolīt nevar. Bet bez mājaslapas jūs tur nav vispār.
 
-> Paraugu lapas Google nerāda. Tās redz tikai tie, kam ir saite. Meklēšanā parādīsies jūsu īstā lapa.
+> Astoņus vispārīgos paraugus var atrast arī Google. Paraugu, kas sagatavots tieši jūsu uzņēmumam, Google nerāda, un to redz tikai tie, kam ir saite. Meklēšanā parādīsies jūsu īstā lapa.
 
 > **Līdz 2026. gada 31. decembrim:** lapa bez maksas, ja pēc tam atļaujat publicēt jūsu godīgu atsauksmi.
 

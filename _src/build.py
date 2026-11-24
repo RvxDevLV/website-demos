@@ -631,7 +631,7 @@ SKIN_CSS.update({
         '.steps .ico{display:none}'
         '.contact{background:var(--surface);color:var(--ink);border-top:1px solid var(--line)}.contact .info svg{color:var(--ink)}.hours,.hours div{border-color:var(--line)}.hours .now{color:var(--ink);font-weight:800}'
         '.map{background:var(--bg)}form{background:var(--bg);box-shadow:none;border:1px solid var(--ink)}footer,.bar{background:var(--surface);color:var(--ink);border-top:1px solid var(--line)}'
-        '@media(max-width:900px){.why ul{grid-template-columns:1fr}}'),
+        '@media(max-width:900px){.why ul{grid-template-columns:1fr}.hero-fig::before{inset:10px -4px -10px 10px}}'),
     # hair salon: dark glam, huge italic serif, running strip of services, list that moves on hover
     "studija": (
         ':root{--r:0;--bg:#16101a;--surface:#1f1726;--ink:#f4ebe6;--muted:#b7a9b4;--line:#3a2c43;--band:#0e0911;--band-2:#1f1726;--on-band:#f4ebe6}'
@@ -1140,6 +1140,8 @@ for slug, name, loc, town, services, term, *rest in SHOPS:
         if not generic:  # a business demo does not link to the other samples
             page = page.replace(' <a href="../">Kas to veidoja un citi paraugi</a>', "").replace(' <a href="../">Par autoru un citi paraugi</a>', "")
         page = page.replace("{{JSONLD}}", _jsonld)
+        if generic:  # the eight sample sites are public and indexed; business demos stay noindex
+            page = page.replace('<meta name="robots" content="noindex">', f'<link rel="canonical" href="https://rvxdevlv.github.io/website-demos/{slug}/">', 1)
         if LIVE:
             out = ROOT.parent / "klienti" / slug
             out.mkdir(parents=True, exist_ok=True)
