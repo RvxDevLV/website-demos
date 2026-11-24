@@ -1,6 +1,6 @@
 # Darba piezīmes
 
-Publiskais portfolio un paraugu lapas, ko rāda GitHub Pages: https://xanfiend.github.io/website-demos/
+Publiskais portfolio un paraugu lapas, ko rāda GitHub Pages: https://rvxdevlv.github.io/website-demos/
 
 ## Uzbūve
 - `index.html`: portfolio sākumlapa.
