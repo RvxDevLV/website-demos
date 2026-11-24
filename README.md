@@ -45,7 +45,7 @@ Vietu Google rezultātos neviens godīgi apsolīt nevar. Bet bez mājaslapas jū
 
 > Astoņus vispārīgos paraugus var atrast arī Google. Paraugu, kas sagatavots tieši jūsu uzņēmumam, Google nerāda, un to redz tikai tie, kam ir saite. Meklēšanā parādīsies jūsu īstā lapa.
 
-> **Līdz 2026. gada 31. decembrim:** lapa bez maksas, ja pēc tam atļaujat publicēt jūsu godīgu atsauksmi.
+> **Pirmajiem 5 klientiem:** lapa bez maksas, ja pēc tam atļaujat publicēt jūsu godīgu atsauksmi.
 
 ## Kā tas notiek
 

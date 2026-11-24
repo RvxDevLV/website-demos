@@ -93,13 +93,12 @@ p { margin:0; } a { color:inherit; }
 .steps li::before { content:counter(s); font:800 2.2rem/1 var(--wide); font-stretch:125%; color:var(--signal-text); display:block; margin-bottom:8px; }
 .split { display:grid; grid-template-columns:1.2fr .8fr; gap:52px; align-items:start; margin-top:8px; }
 .incl { padding-left:20px; margin:22px 0 0; display:grid; gap:10px; } .incl li::marker { color:var(--signal); }
-.phone-shot { max-width:260px; margin-inline:auto; border:7px solid var(--ink); }
 .pricehead { display:flex; flex-wrap:wrap; gap:18px 36px; align-items:center; justify-content:space-between; }
 
 .scores { list-style:none; padding:0; margin:24px 0 18px; display:grid; grid-template-columns:repeat(4,1fr); border-top:1px solid rgb(241 234 217/.4); }
 .scores li { padding:14px 16px 0; border-left:1px solid rgb(241 234 217/.25); } .scores li:first-child { padding-left:0; border-left:0; }
-.scores li::after { content:""; display:block; height:5px; background:var(--signal); margin-top:12px; transform:scaleX(0); transform-origin:left; transition:transform 1.4s cubic-bezier(.3,0,.2,1); }
-.scores.in li::after { transform:scaleX(var(--f)); } .scores li:nth-child(2)::after { transition-delay:.1s; } .scores li:nth-child(3)::after { transition-delay:.2s; } .scores li:nth-child(4)::after { transition-delay:.3s; }
+.scores li::after { content:""; display:block; height:5px; background:var(--signal); margin-top:12px; transform:scaleX(0); transform-origin:left; transition:transform 3s cubic-bezier(.3,0,.2,1); }
+.scores.in li::after { transform:scaleX(var(--f)); } .scores li:nth-child(2)::after { transition-delay:.9s; } .scores li:nth-child(3)::after { transition-delay:.6s; } .scores li:nth-child(4)::after { transition-delay:.3s; }
 .scores b { display:block; font:800 clamp(2.6rem,6vw,4.4rem)/1 var(--wide); font-stretch:125%; }
 
 .demos { display:grid; grid-template-columns:repeat(4,1fr); gap:0; margin-top:30px; border-top:1px solid var(--ink); }
@@ -162,14 +161,14 @@ footer { background:var(--ink); color:var(--bg); border-top:1px solid rgb(241 23
 
 <section class="hero">
   <div class="wrap">
-    <p class="dateline lab"><span>Mājaslapas vietējiem uzņēmumiem</span><span>Latvija · 2026. gada izdevums</span></p>
+    <p class="dateline lab"><span>Mājaslapas vietējiem uzņēmumiem</span><span>Latvija · 2026. gads</span></p>
     <div class="grid">
       <div>
         <h1>Mājaslapas maziem uzņēmumiem</h1>
-        <p class="lead">Vispirms uztaisu paraugu ar jūsu uzņēmuma nosaukumu un pakalpojumiem. Jūs to apskatāt un izlemjat. Ja paraugs der, ielieku jūsu tekstus, cenas un foto, un lapa ir gatava.</p>
+        <p class="lead">Vispirms izveidoju paraugu ar jūsu uzņēmuma nosaukumu un pakalpojumiem. Jūs to apskatāt un izlemjat. Ja paraugs der, ievietoju jūsu tekstus, cenas un foto, un lapa ir gatava. Paraugā var mainīt jebko un pielāgot jūsu vēlmēm: tekstus, krāsas, attēlus, izkārtojumu un sadaļas.</p>
         <div class="free">
-          <span class="tag"><b>0 €</b><span>līdz 2026. gada beigām</span></span>
-          <p><b>Šobrīd pilnu mājaslapu izveidoju bez maksas</b>, apmaiņā pret jūsu godīgu atsauksmi par sadarbību. Piedāvājums ir spēkā līdz 2026. gada beigām.</p>
+          <span class="tag"><b>0 €</b><span>pirmajiem 5 klientiem</span></span>
+          <p><b>Pirmie 5 klienti mājaslapu saņem bez maksas</b>, apmaiņā pret godīgu atsauksmi par sadarbību.</p>
         </div>
         <div class="cta-row">
           <a class="btn" href="#paraugi">Skatīt paraugus</a>
@@ -186,7 +185,7 @@ footer { background:var(--ink); color:var(--bg); border-top:1px solid rgb(241 23
 
 <div class="note">
   <div class="wrap">
-    <p><b>Ja saņēmāt no manis saiti:</b> lapa, ko jums atsūtīju, ir paraugs tieši jūsu uzņēmumam, jau ar jūsu nosaukumu un pakalpojumiem. Teksti, cenas, tālrunis un adrese tajā ir piemēri, līdz iedodat īstos. Paraugu, kas sagatavots jūsu uzņēmumam, redz tikai tie, kam ir saite.</p>
+    <p><b>Ja saņēmāt no manis saiti:</b> lapa, ko jums atsūtīju, ir paraugs tieši jūsu uzņēmumam, jau ar jūsu nosaukumu un pakalpojumiem. Teksti, cenas, tālrunis un adrese tajā ir piemēri, līdz jūs atsūtāt īstos. Tajā var mainīt jebko: tekstus, krāsas, attēlus un izkārtojumu. Paraugu, kas sagatavots jūsu uzņēmumam, redz tikai tie, kam ir saite.</p>
   </div>
 </div>
 
@@ -194,10 +193,10 @@ footer { background:var(--ink); color:var(--bg); border-top:1px solid rgb(241 23
   <div class="wrap">
     <h2>Ko mājaslapa dod uzņēmumam</h2>
     <ul class="gains">
-      <li><h3>Jūs atrod Google</h3><p>Cilvēki meklē pakalpojumu un pilsētu. Bez mājaslapas viņi aiziet pie tiem, kurus atrod.</p></li>
-      <li><h3>Mazāk zvanu “cik maksā?”</h3><p>Cenas un darba laiks ir redzami, tāpēc zvana tie, kas grib pieteikties.</p></li>
-      <li><h3>Pieteikumi arī vakaros</h3><p>Forma strādā brīvdienās un pēc darba laika, kad telefonu neceļat.</p></li>
-      <li><h3>Jauni klienti uzticas ātrāk</h3><p>Pirms zvana cilvēks grib redzēt, ka uzņēmums ir īsts un ko tas dara.</p></li>
+      <li><h3>Jūs atrod Google</h3><p>Cilvēki meklē pakalpojumu un pilsētu. Bez mājaslapas viņi izvēlas tos, kurus var atrast.</p></li>
+      <li><h3>Mazāk zvanu ar jautājumu “cik maksā?”</h3><p>Cenas un darba laiks ir redzami, tāpēc zvana tie, kas grib pieteikties.</p></li>
+      <li><h3>Pieteikumi arī vakaros</h3><p>Pieteikuma forma darbojas arī brīvdienās un pēc darba laika, kad nevarat atbildēt uz zvanu.</p></li>
+      <li><h3>Jauni klienti uzticas ātrāk</h3><p>Pirms zvanīt, cilvēks grib redzēt, ka uzņēmums ir īsts un ko tas piedāvā.</p></li>
     </ul>
   </div>
 </section>
@@ -206,51 +205,47 @@ footer { background:var(--ink); color:var(--bg); border-top:1px solid rgb(241 23
   <div class="wrap">
     <h2>Kā tas notiek</h2>
     <ol class="steps">
-      <li><h3>Apskatāt paraugu</h3><p>Bez maksas un bez saistībām. Ja tas jums nav vajadzīgs, vienkārši pasakiet.</p></li>
-      <li><h3>Pasakāt, ko mainīt</h3><p>Atsūtiet savas cenas, foto, darba laiku un kontaktus. Izmaiņas parasti ieviešu tajā pašā vai nākamajā darba dienā.</p></li>
-      <li><h3>Lapa ir gatava</h3><p>Publicēju to jūsu adresē un palīdzu sakārtot Google uzņēmuma profilu. Ja vēlaties, vēlāk lapu arī uzturu.</p></li>
+      <li><h3>Aplūkojiet paraugu</h3><p>Bez maksas un bez saistībām. Ja tas nav vajadzīgs, vienkārši pasakiet.</p></li>
+      <li><h3>Norādiet savas vēlmes</h3><p>Atsūtiet savas cenas, foto, darba laiku un kontaktus. Mainīt un pielāgot var jebko: tekstus, krāsas, attēlus, izkārtojumu un sadaļas. Izmaiņas parasti ieviešu tajā pašā vai nākamajā darba dienā.</p></li>
+      <li><h3>Saņemiet gatavu mājaslapu</h3><p>Publicēju to jūsu adresē un palīdzu sakārtot Google uzņēmuma profilu. Ja vēlaties, vēlāk lapu arī uzturēšu.</p></li>
     </ol>
   </div>
 </section>
 
 <section id="ietilpst" class="sec airy">
   <div class="wrap">
-    <div class="pricehead"><h2>Kas ietilpst</h2><span class="tag"><b>no 50 €</b><span>pēc 2026. gada, cena iepriekš</span></span></div>
-    <div class="split">
-    <div>
-      <ul class="incl">
-        <li>Viena pārskatāma lapa: pakalpojumi, cenas, darba laiks, kontakti</li>
-        <li>Labi izskatās un ātri atveras telefonā</li>
-        <li>Sagatavota Google meklētājam: nosaukums, pilsēta, pakalpojumi un darba laiks ir norādīti tā, lai meklētājs tos saprot</li>
-        <li>Pieteikuma forma, kas nonāk jūsu e-pastā</li>
-        <li>Palīdzība ar uzņēmuma kartīti internetā: jūsu adrese, darba laiks, tālrunis, foto un atsauksmes, ko cilvēki redz Google meklētājā un kartē</li>
-        <li>Palīdzība ar adresi (domēnu), piemēram, jusuuznemums.lv</li>
-        <li>Trīs mēnešus pēc publicēšanas izmaiņas bez maksas, arī dizaina un funkciju izmaiņas</li>
-      </ul>
-    </div>
-    <picture><source type="image/webp" srcset="assets/paraugs-telefona.webp"><img class="phone-shot" src="assets/paraugs-telefona.jpg" alt="Parauga lapa telefonā" width="390" height="844" loading="lazy"></picture>
-    </div>
+    <div class="pricehead"><h2>Kas ietilpst</h2><span class="tag"><b>no 50 €</b><span>pēc pirmajiem 5 klientiem</span></span></div>
+    <ul class="incl">
+      <li>Viena pārskatāma lapa: pakalpojumi, cenas, darba laiks, kontakti</li>
+      <li>Dizains, teksti, krāsas un attēli tiek pielāgoti jūsu vēlmēm, nevis ņemti gatavi</li>
+      <li>Lapa labi izskatās un ātri atveras telefonā</li>
+      <li>Sagatavota Google meklētājam: nosaukums, pilsēta, pakalpojumi un darba laiks ir norādīti tā, lai meklētājs tos saprot</li>
+      <li>Pieteikuma forma, kuras ziņas nonāk jūsu e-pastā</li>
+      <li>Palīdzība ar uzņēmuma profilu Google kartē: adrese, darba laiks, tālrunis, foto un atsauksmes, ko cilvēki redz meklētājā un kartē</li>
+      <li>Palīdzība ar mājaslapu: adrese (domēns), piemēram, jusuuznemums.lv</li>
+      <li>Trīs mēnešus pēc mājaslapas publicēšanas jebkuras izmaiņas ir bez maksas</li>
+    </ul>
   </div>
 </section>
 
 <section class="sec ink tight">
   <div class="wrap">
     <h2>Ātruma tests</h2>
-    <p class="sub">Šīs lapas rezultāts Google PageSpeed (Lighthouse) testā telefona režīmā, 2026. gada 12. novembrī. Paraugu lapas ir veidotas tāpat.</p>
+    <p class="sub">Šīs lapas rezultāts Google PageSpeed (Lighthouse) testā telefona režīmā, 2026. gada 24. novembrī. Paraugu lapas ir veidotas tāpat.</p>
     <ul class="scores">
-      <li style="--f:.96"><b data-n="96">96</b><span class="lab">Ātrdarbība</span></li>
-      <li style="--f:.98"><b data-n="98">98</b><span class="lab">Pieejamība</span></li>
-      <li style="--f:1"><b data-n="100">100</b><span class="lab">Labā prakse</span></li>
+      <li style="--f:1"><b data-n="100">100</b><span class="lab">Ātrums</span></li>
+      <li style="--f:1"><b data-n="100">100</b><span class="lab">Ērta lietošana</span></li>
+      <li style="--f:1"><b data-n="100">100</b><span class="lab">Drošība un kārtība</span></li>
       <li style="--f:1"><b data-n="100">100</b><span class="lab">Atrodamība Google</span></li>
     </ul>
-    <p class="sub">Neticiet uz vārda: <a href="https://pagespeed.web.dev/analysis?url=https%3A%2F%2Frvxdevlv.github.io%2Fwebsite-demos%2F" target="_blank" rel="noopener">pārbaudiet paši Google PageSpeed</a>. Rezultāts katrā mērījumā var nedaudz atšķirties.</p>
+    <p class="sub">Ja jūs neticat uz vārda, <a href="https://pagespeed.web.dev/analysis?url=https%3A%2F%2Frvxdevlv.github.io%2Fwebsite-demos%2F" target="_blank" rel="noopener">pārbaudiet paši Google PageSpeed</a>. Rezultāts katrā mērījumā var nedaudz atšķirties.</p>
   </div>
 </section>
 
 <section id="paraugi" class="sec alt">
   <div class="wrap">
     <h2>Paraugi</h2>
-    <p class="sub"><span class="hov">Uzbrauciet ar peli uz attēla, lai redzētu visu lapu.</span><span class="tch">Pieskarieties attēlam, lai atvērtu paraugu. Tas pats pārvietojas, lai parādītu visu lapu.</span></p>
+    <p class="sub"><span class="hov">Uzbrauciet ar peli uz attēla, lai redzētu visu lapu.</span><span class="tch">Pieskarieties attēlam, lai atvērtu paraugu. Attēls pats ritinās, lai parādītu visu lapu.</span></p>
     <div class="demos">
       <a class="demo" style="--i:0" href="autoserviss/"><span class="shot"><picture><source type="image/webp" srcset="assets/paraugs-auto-450.webp 450w, assets/paraugs-auto.webp 900w" sizes="(min-width:901px) 260px, (min-width:481px) 45vw, 100vw"><img src="assets/paraugs-auto.jpg" alt="" width="900" height="1800" loading="lazy"></picture></span><h3>Autoserviss</h3><p>Arī riepu servisiem, kravas auto servisiem, evakuatoriem un virsbūves darbnīcām.</p></a>
       <a class="demo" style="--i:1" href="buvfirma/"><span class="shot"><picture><source type="image/webp" srcset="assets/paraugs-buve-450.webp 450w, assets/paraugs-buve.webp 900w" sizes="(min-width:901px) 260px, (min-width:481px) 45vw, 100vw"><img src="assets/paraugs-buve.jpg" alt="" width="900" height="1800" loading="lazy"></picture></span><h3>Būvniecība un remonts</h3><p>Tāmes paraugs, darbu cenas un pieteikums objekta apskatei.</p></a>
@@ -261,17 +256,17 @@ footer { background:var(--ink); color:var(--bg); border-top:1px solid rgb(241 23
       <a class="demo" style="--i:6" href="veterinara-klinika/"><span class="shot"><picture><source type="image/webp" srcset="assets/paraugs-vet-450.webp 450w, assets/paraugs-vet.webp 900w" sizes="(min-width:901px) 260px, (min-width:481px) 45vw, 100vw"><img src="assets/paraugs-vet.jpg" alt="" width="900" height="1800" loading="lazy"></picture></span><h3>Veterinārā klīnika</h3><p>Vizītes izmaksu paraugs, cenas un pieteikums vizītei.</p></a>
       <a class="demo" style="--i:7" href="apbedisanas-birojs/"><span class="shot"><picture><source type="image/webp" srcset="assets/paraugs-beres-450.webp 450w, assets/paraugs-beres.webp 900w" sizes="(min-width:901px) 260px, (min-width:481px) 45vw, 100vw"><img src="assets/paraugs-beres.jpg" alt="" width="900" height="1800" loading="lazy"></picture></span><h3>Apbedīšanas birojs</h3><p>Pakalpojumi, izmaksas un skaidri soļi grūtā brīdī.</p></a>
     </div>
-    <p class="sub">Citai nozarei uztaisīšu atsevišķu paraugu. Uzrakstiet, ar ko nodarbojaties.</p>
+    <p class="sub">Citai nozarei izveidošu atsevišķu paraugu. Uzrakstiet, ar ko nodarbojaties.</p>
   </div>
 </section>
 
 <section class="sec">
   <div class="wrap faq">
     <h2>Jautājumi un atbildes</h2>
-    <details><summary>Cik tas maksā?</summary><p>Šobrīd pilnu mājaslapu izveidoju bez maksas, apmaiņā pret godīgu atsauksmi. Piedāvājums ir spēkā līdz 2026. gada beigām. Pēc tam vienas lapas mājaslapa maksā no 50 €. Precīzu cenu nosaucu pirms darba, un tā vairs nemainās.</p></details>
+    <details><summary>Cik tas maksā?</summary><p>Pirmie 5 klienti pilnu mājaslapu saņem bez maksas, apmaiņā pret godīgu atsauksmi. Pēc tam vienas lapas mājaslapa maksā no 50 €. Precīzu cenu nosaucu pirms darba, un tā vairs nemainās.</p></details>
     <details><summary>Kas man jāsagatavo?</summary><p>Pakalpojumu saraksts, cenas, darba laiks, kontakti un dažas fotogrāfijas, ja ir. Tekstus palīdzu noformulēt.</p></details>
     <details><summary>Vai paraugu redz arī citi?</summary><p>Astoņus vispārīgos paraugus (autoserviss, ziedu salons un citi) var atrast arī Google. Paraugu, kas sagatavots tieši jūsu uzņēmumam, redz tikai tie, kam ir saite, un Google to nerāda. Meklēšanā parādīsies jūsu īstā lapa.</p></details>
-    <details><summary>Vai būšu pirmajā vietā Google?</summary><p>To godīgi apsolīt nevar neviens. Lapu sagatavoju tā, lai meklētājs saprot, kas jūs esat un kur atrodaties, un piesaku to Google. Bez mājaslapas jūs tur nav vispār.</p></details>
+    <details><summary>Vai būšu pirmajā vietā Google?</summary><p>To godīgi apsolīt nevar neviens. Lapu sagatavoju tā, lai meklētājs saprot, kas jūs esat un kur atrodaties, un piesaku to Google. Bez mājaslapas jūsu tur vispār nav.</p></details>
     <details><summary>Kā notiek sadarbība?</summary><p>Visu var nokārtot e-pastā vai pa tālruni, jums ērtā laikā. Pirms darba vienojamies rakstiski, kas tiek darīts un kad, lai abiem viss ir skaidrs.</p></details>
   </div>
 </section>
@@ -328,7 +323,7 @@ new IntersectionObserver(function (es, o) {
     var t0 = performance.now();
     e.target.querySelectorAll('b[data-n]').forEach(function (b) {
       var n = +b.dataset.n;
-      (function tick(t) { var k = Math.min(1, (t - t0) / 1400); b.textContent = Math.round(n * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(tick); })(t0);
+      (function tick(t) { var k = Math.min(1, (t - t0) / 3000); b.textContent = Math.round(n * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(tick); })(t0);
     });
   });
 }, { threshold: .4 }).observe(document.querySelector('.scores'));
