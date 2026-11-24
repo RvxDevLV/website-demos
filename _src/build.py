@@ -372,6 +372,8 @@ KINDS = [
     ("piegād", "truck", "Piegādājam norunātajā laikā un vietā."),
     ("kompozīc", "gift", "Galdam, dāvanai vai telpas noformējumam."),
     ("pušķ|zied|rozes|flor", "flower", "Svaigi ziedi un pušķi pēc jūsu vēlmēm un budžeta."),
+    ("izbraukum", "truck", "Atbraucam pie jums: ēdiens tiek sagatavots un pasniegts uz vietas."),
+    ("bēru mielast", "utensils", "Klusi un laikā, ēdienkarti saskaņojam ar jums."),
     ("banket|mielast|izbraukum|svinīb|klāšan", "utensils", "Ēdienkarti un cenu vienai personai saskaņojam iepriekš."),
     ("pusdien|ēdien|ēdin|virtuv|līdzņem|brokast|uzkod", "utensils", "Gatavojam uz vietas no svaigiem produktiem."),
     ("kafij|kūk|konditor|desert", "cup", "Uz vietas vai līdzņemšanai."),
@@ -420,7 +422,7 @@ FONTS = {
              ("Bitter:wght@600;700", '"Bitter",Georgia,serif', _T % ("-.01em", "700", "2.1rem,5vw,3.5rem", "1.1", "1.25rem")),
              ("Sora:wght@600;700", '"Sora",Arial,sans-serif', _T % ("-.03em", "700", "2rem,4.8vw,3.3rem", "1.1", "1.2rem"))],
     "soft": [("EB+Garamond:wght@600;700", '"EB Garamond",Georgia,serif', _T % ("0", "700", "2.5rem,6.2vw,4.2rem", "1.08", "1.3rem")),
-             ("Fraunces:wght@500;600", '"Fraunces",Georgia,serif', _T % ("-.01em", "600", "2.3rem,5.8vw,3.9rem", "1.06", "1.3rem")),
+             ("Newsreader:wght@500;600", '"Newsreader",Georgia,serif', _T % ("-.01em", "600", "2.3rem,5.8vw,3.9rem", "1.06", "1.3rem")),
              ("DM+Serif+Display", '"DM Serif Display",Georgia,serif', _T % ("0", "400", "2.4rem,6vw,4.1rem", "1.06", "1.35rem")),
              ("Lora:wght@600;700", '"Lora",Georgia,serif', _T % ("-.005em", "700", "2.2rem,5.4vw,3.7rem", "1.1", "1.3rem"))],
     "clean": [("", "var(--body)", _T % ("-.01em", "600", "2.2rem,5.6vw,3.7rem", "1.1", "1.25rem")),
@@ -560,7 +562,7 @@ SKIN_CSS = {
         '.cards li:hover{translate:-2px -2px;box-shadow:7px 7px 0 var(--edge);border-color:var(--edge)}'
         '.cards .ico{display:grid;place-items:center;width:50px;height:50px;background:var(--signal);border:2px solid var(--edge);margin-bottom:16px;padding:0}'
         '.cards .ico svg{color:var(--on-signal)}.cards h3{font:700 1.2rem/1.25 var(--display);text-transform:uppercase}'
-        '.cards .more{background:var(--ink);color:var(--bg)}.cards .more a{border-bottom-color:var(--signal)}'
+        '.cards .more{background:var(--ink);color:var(--bg);grid-column:1/-1}.cards .more a{border-bottom-color:var(--signal)}'
         '.why{background:var(--signal);color:var(--on-signal)}.why .wrap{grid-template-columns:1fr}.why-head{position:static}.why .art{display:none}'
         '.why ul{display:grid;grid-template-columns:1fr 1fr;gap:20px}'
         '.why li,.why li:last-child,.why li:nth-last-child(-n+2){border:2px solid var(--on-signal);padding:22px;background:color-mix(in srgb,var(--on-signal) 6%,transparent)}'
@@ -586,7 +588,7 @@ SKIN_FONTS.update({
     "klinika": [FONTS["clean"][1]],
     "studija": [("Bodoni+Moda:ital,wght@0,500;0,700;1,500", '"Bodoni Moda",Georgia,serif', _T % ("-.02em", "500", "2.6rem,8vw,6.5rem", ".95", "1.3rem"))],
     "draugs": [("Bricolage+Grotesque:wght@600;800", '"Bricolage Grotesque",Arial,sans-serif', _T % ("-.03em", "800", "2.3rem,6vw,4.4rem", "1", "1.25rem"))],
-    "miers": [("Cormorant+Garamond:wght@500;600", '"Cormorant Garamond",Georgia,serif', _T % ("0", "500", "2.6rem,6.4vw,4.6rem", "1.05", "1.45rem"))],
+    "miers": [("EB+Garamond:wght@500;600", '"EB Garamond",Georgia,serif', _T % ("0", "500", "2.6rem,6.4vw,4.6rem", "1.05", "1.45rem"))],
 })
 
 SKIN_CSS.update({
@@ -877,6 +879,7 @@ KINDS_BY = {
              ("jumt|skurste", "home", "Palīdzam izvēlēties segumu un ieklājam to."),
              ("kamīn|krāsn|pavard|mūr", "flame", "Būvējam un mūrējam tā, lai labi vilktu un sildītu."),
              ("ūden|kanaliz|apkur|santeh", "drop", "Ierīkojam un pārbaudām, pirms nododam."),
+             ("flīz|apdar|špakt|krās", "check", "Tīri un precīzi, cenu par kvadrātmetru nosaucam iepriekš."),
              ("", "wrench", "Tāmi un termiņu nosaucam pirms darba.")],
     "friz": [("manikīr|pedikīr|nag", "check", "Pēc pieraksta, jums ērtā laikā."),
              ("skropst|uzac|kosmet|grims|sejas|vasko|masāž|solārij", "flower", "Pēc pieraksta, jums ērtā laikā."),

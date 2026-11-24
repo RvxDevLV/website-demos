@@ -385,7 +385,10 @@ footer p { opacity: .7; max-width: 46em; }
   .steps h3 { margin: 0 0 4px; }
   .phone span { display: none; }
   .phone { padding: 9px 11px; }
-  .brand { font-size: 1.2rem; }
+  .brand { font-size: 1.2rem; min-height: 44px; }
+  input, textarea { font-size: 16px; } /* 16px stops iPhones zooming in on focus */
+  .demo-note a { display: inline-block; padding: 10px 0; }
+  .cards .more a { display: inline-flex; align-items: center; min-height: 44px; }
   form { padding: 22px; }
   body { padding-bottom: 68px; }
   .bar { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; position: fixed; inset: auto 0 0; z-index: 30; padding: 10px 14px max(10px, env(safe-area-inset-bottom)); background: var(--band); color: var(--on-band); border-top: 1px solid rgb(255 255 255 / .12); transform: translateY(110%); transition: transform .35s var(--ease); }
