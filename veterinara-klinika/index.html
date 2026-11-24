@@ -10,7 +10,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2314262b'/%3E%3Cpath d='M9 22 22 9M9 9h13v13' fill='none' stroke='%23f2b705' stroke-width='3.5'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Bricolage+Grotesque:wght@600;800&display=swap">
 <style>
 :root {
   --bg: #f3f4f2; --surface: #fff; --ink: #14262b; --muted: #55676b; --line: #d6dcda;
@@ -19,10 +19,6 @@
   --body: "Barlow", "Segoe UI", Arial, sans-serif;
   --r: 4px; --shadow: 0 1px 2px rgb(20 38 43 / .06), 0 10px 30px rgb(20 38 43 / .09);
   --ease: cubic-bezier(.2, .7, .2, 1);
-}
-@media (prefers-color-scheme: dark) {
-  :root { --bg: #0f1a1d; --surface: #17272c; --ink: #e9efee; --muted: #9fb0b3; --line: #2b3f45;
-    --band: #0a1215; --band-2: #12212a; --shadow: 0 10px 30px rgb(0 0 0 / .4); color-scheme: dark; }
 }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: 76px; }
@@ -222,10 +218,14 @@ footer p { opacity: .7; max-width: 46em; }
 .still *, .still *::before, .still *::after { animation: none !important; transition: none !important; }
 .still .art * { stroke-dashoffset: 0 !important; }
 .still .owner { display: none; }
+/* reduced motion (also what Windows "max performance" reports): keep fades and the line drawing, drop everything that travels, zooms or shakes */
+@keyframes fade { from { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  *, *::before, *::after { animation: none !important; transition: none !important; }
-  .art * { stroke-dashoffset: 0 !important; }
+  a.phone svg, .open-now i, .hero-bg, .hero-fig img, .hero-fig::before { animation: none !important; }
+  .hero .wrap > div > *, .estimate, .estimate tr, .facts ul, .map iframe, #sent { animation-name: fade !important; }
+  .js .rv, .js [data-stagger] > * { transform: none !important; }
+  .btn, .cards li, .shots img { translate: none !important; scale: none !important; }
 }
 
 @media (max-width: 900px) {
@@ -254,8 +254,8 @@ footer p { opacity: .7; max-width: 46em; }
   .bar .btn::after { content: none; }
 }
 </style>
-<style>:root{--band:#0f3d3e;--band-2:#1b605d;--signal:#ffc857;--on-signal:#2a1c00;--display:var(--body)}@media(prefers-color-scheme:light){:root{--bg:#f3f8f6}}h1,h2,.brand,form h3{text-transform:none;letter-spacing:-.01em;font-weight:600}h1{font-size:clamp(2.2rem,5.6vw,3.7rem);line-height:1.1}h2{line-height:1.14}.brand{font-size:1.25rem}:root{--r:2px}.hero-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-3;animation:zoom 16s ease-out both}@keyframes zoom{from{scale:1.1}}.hero::before{z-index:-1;background:linear-gradient(90deg,color-mix(in srgb,var(--band) 96%,transparent),color-mix(in srgb,var(--band) 80%,transparent) 46%,color-mix(in srgb,var(--band) 16%,transparent));-webkit-mask-image:none;mask-image:none}.hero .wrap{grid-template-columns:1fr;padding-block:clamp(72px,10vw,140px) clamp(120px,13vw,170px)}.hero .wrap>div{max-width:620px}</style>
-<script>if (/[?&]still/.test(location.search)) document.documentElement.className = 'still'; else if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.className = 'js';</script>
+<style>:root{--band:#0f3d3e;--band-2:#1b605d;--signal:#ffc857;--on-signal:#2a1c00;--display:"Bricolage Grotesque",Arial,sans-serif}:root{--bg:#f3f8f6}h1,h2,.brand,form h3{text-transform:none;letter-spacing:-.03em;font-weight:800}h1{font-size:clamp(2.3rem,6vw,4.4rem);line-height:1}h2{line-height:1.14}.brand{font-size:1.25rem}.hero::before{display:none}.hero .wrap{max-width:none;padding:0;grid-template-columns:1fr 1fr;gap:0;align-items:stretch}.hero .wrap>div{align-self:center;padding:clamp(52px,7vw,100px) clamp(24px,5vw,72px) clamp(104px,11vw,140px) max(20px,calc(50vw - 540px))}.hero-fig{margin:0;position:relative;min-height:440px;overflow:hidden}.hero-fig img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:zoom 16s ease-out both}@keyframes zoom{from{scale:1.1}}.hero-fig::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--band),transparent 35%)}@media(max-width:900px){.hero .wrap{grid-template-columns:1fr}.hero .wrap>div{padding:44px 20px 36px}.hero-fig{min-height:280px}.hero-fig::after{background:linear-gradient(180deg,var(--band),transparent 35%)}}:root{--r:0;--bg:#fbf1dd;--surface:#fff8ea;--ink:#1d2b26;--muted:#5d675f;--line:#e3d4b4}h1,h2{text-transform:none;letter-spacing:-.035em;font-weight:800}.hero h1{font-size:clamp(2.6rem,6.6vw,5.2rem);overflow-wrap:normal}.top{background:var(--bg);color:var(--ink);border-bottom:2px solid var(--ink)}.top nav a{font-weight:600;opacity:1}.top nav a::after{background:var(--ink);height:3px}.phone{border-radius:0;background:var(--signal);color:var(--on-signal);border:2px solid var(--ink)}.btn{border-radius:0;border:2px solid var(--ink)}.btn.primary{background:var(--signal);color:var(--on-signal)}.btn.ghost{background:var(--surface);color:var(--ink)}.hero .btn.ghost{background:transparent;color:inherit;border-color:currentColor}.facts ul{border:2px solid var(--ink);border-radius:0;background:var(--surface)}.facts li+li{border-color:var(--ink)}.cards{gap:22px}.cards li{display:block;border:0;border-radius:0;padding:26px;background:var(--surface);clip-path:polygon(0 0,calc(100% - 34px) 0,100% 34px,100% 100%,0 100%);transition:rotate .25s var(--ease),background .25s}.cards li:nth-child(3n+1){background:var(--signal);color:var(--on-signal)}.cards li:nth-child(3n+1) p{color:inherit;opacity:.85}.cards li:nth-child(3n+1) .ico svg{color:var(--on-signal)}.cards li:nth-child(3n+2){background:var(--band);color:var(--on-band)}.cards li:nth-child(3n+2) p{color:inherit;opacity:.8}.cards li:hover{rotate:-1deg}.cards .ico{display:block;margin-bottom:12px}.cards .ico svg{width:30px;height:30px}.cards h3{font:800 1.3rem/1.2 var(--display)}.cards .more{background:var(--surface);color:var(--ink);border:2px dashed var(--ink)}.cards .more p{color:var(--muted);opacity:1}.why{background:var(--band)}.why li{border-color:rgb(255 255 255/.2)}.prices{background:var(--surface);border:2px solid var(--ink);border-radius:0}.prices td{border-color:var(--line)}.prices td:last-child{font:800 1.3rem var(--display)}.alt{background:var(--surface);border-block:2px solid var(--ink)}.steps{counter-reset:s}.steps li{border-top:0;counter-increment:s;padding-top:0}.steps .ico{display:none}.steps li::before{content:counter(s);display:block;font:800 5.5rem/.9 var(--display);color:transparent;-webkit-text-stroke:2px var(--ink);margin-bottom:10px}.steps li:hover::before{color:var(--signal)}.steps li::before{transition:color .25s}.contact{background:var(--band)}form{border:2px solid var(--ink);box-shadow:none;border-radius:0;background:var(--surface)}input,textarea{border:2px solid var(--ink);border-radius:0;background:var(--bg)}.estimate{border:2px solid var(--ink);border-radius:0}footer{border-top:4px solid var(--signal)}@media(prefers-reduced-motion:reduce){.cards li:hover{rotate:none}}</style>
+<script>if (/[?&]still/.test(location.search)) document.documentElement.className = 'still'; else if ('IntersectionObserver' in window) document.documentElement.className = 'js';</script>
 </head>
 <body>
 <svg hidden>
@@ -303,7 +303,6 @@ footer p { opacity: .7; max-width: 46em; }
 </header>
 
 <section class="hero">
-  <img class="hero-bg" src="../assets/foto/vet-3.jpg" alt="" fetchpriority="high">
   <div class="wrap">
     <div>
       <p class="place">Veterinārā klīnika</p>
@@ -315,6 +314,7 @@ footer p { opacity: .7; max-width: 46em; }
         <a class="btn ghost" href="#cenas">Skatīt cenas</a>
       </div>
     </div>
+    <figure class="hero-fig"><img src="../assets/foto/vet-3.jpg" alt="" fetchpriority="high"></figure>
   </div>
 </section>
 

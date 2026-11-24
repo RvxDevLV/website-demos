@@ -10,7 +10,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2314262b'/%3E%3Cpath d='M9 22 22 9M9 9h13v13' fill='none' stroke='%23f2b705' stroke-width='3.5'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=EB+Garamond:wght@600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=DM+Serif+Display&display=swap">
 <style>
 :root {
   --bg: #f3f4f2; --surface: #fff; --ink: #14262b; --muted: #55676b; --line: #d6dcda;
@@ -19,10 +19,6 @@
   --body: "Barlow", "Segoe UI", Arial, sans-serif;
   --r: 4px; --shadow: 0 1px 2px rgb(20 38 43 / .06), 0 10px 30px rgb(20 38 43 / .09);
   --ease: cubic-bezier(.2, .7, .2, 1);
-}
-@media (prefers-color-scheme: dark) {
-  :root { --bg: #0f1a1d; --surface: #17272c; --ink: #e9efee; --muted: #9fb0b3; --line: #2b3f45;
-    --band: #0a1215; --band-2: #12212a; --shadow: 0 10px 30px rgb(0 0 0 / .4); color-scheme: dark; }
 }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: 76px; }
@@ -222,10 +218,14 @@ footer p { opacity: .7; max-width: 46em; }
 .still *, .still *::before, .still *::after { animation: none !important; transition: none !important; }
 .still .art * { stroke-dashoffset: 0 !important; }
 .still .owner { display: none; }
+/* reduced motion (also what Windows "max performance" reports): keep fades and the line drawing, drop everything that travels, zooms or shakes */
+@keyframes fade { from { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  *, *::before, *::after { animation: none !important; transition: none !important; }
-  .art * { stroke-dashoffset: 0 !important; }
+  a.phone svg, .open-now i, .hero-bg, .hero-fig img, .hero-fig::before { animation: none !important; }
+  .hero .wrap > div > *, .estimate, .estimate tr, .facts ul, .map iframe, #sent { animation-name: fade !important; }
+  .js .rv, .js [data-stagger] > * { transform: none !important; }
+  .btn, .cards li, .shots img { translate: none !important; scale: none !important; }
 }
 
 @media (max-width: 900px) {
@@ -254,8 +254,8 @@ footer p { opacity: .7; max-width: 46em; }
   .bar .btn::after { content: none; }
 }
 </style>
-<style>:root{--band:#2a1c14;--band-2:#46301f;--signal:#e9a23b;--on-signal:#2a1602;--display:"EB Garamond",Georgia,serif}@media(prefers-color-scheme:light){:root{--bg:#faf5ee}}h1,h2,.brand,form h3{text-transform:none;letter-spacing:0;font-weight:700}h1{font-size:clamp(2.5rem,6.2vw,4.2rem);line-height:1.08}h2{line-height:1.14}.brand{font-size:1.3rem}:root{--r:6px}.hero-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-3;animation:zoom 16s ease-out both}@keyframes zoom{from{scale:1.1}}.hero::before{z-index:-1;background:linear-gradient(90deg,color-mix(in srgb,var(--band) 96%,transparent),color-mix(in srgb,var(--band) 80%,transparent) 46%,color-mix(in srgb,var(--band) 16%,transparent));-webkit-mask-image:none;mask-image:none}.hero .wrap{grid-template-columns:1fr;padding-block:clamp(72px,10vw,140px) clamp(120px,13vw,170px)}.hero .wrap>div{max-width:620px}</style>
-<script>if (/[?&]still/.test(location.search)) document.documentElement.className = 'still'; else if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.className = 'js';</script>
+<style>:root{--band:#2a1c14;--band-2:#46301f;--signal:#e9a23b;--on-signal:#2a1602;--display:"DM Serif Display",Georgia,serif}:root{--bg:#faf5ee}h1,h2,.brand,form h3{text-transform:none;letter-spacing:0;font-weight:400}h1{font-size:clamp(2.4rem,6vw,4.1rem);line-height:1.06}h2{line-height:1.14}.brand{font-size:1.35rem}.hero-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-3;animation:zoom 16s ease-out both}@keyframes zoom{from{scale:1.1}}.hero::before{z-index:-1;background:color-mix(in srgb,var(--band) 76%,transparent);-webkit-mask-image:none;mask-image:none}.hero .wrap{grid-template-columns:1fr;justify-items:center;text-align:center;padding-block:clamp(84px,12vw,160px) clamp(130px,14vw,180px)}.hero .wrap>div{max-width:720px}.hero .lead,.tagline{margin-inline:auto}.cta-row{justify-content:center}:root{--r:2px;--bg:#2a1c14;--surface:#33241a;--ink:#f3e7d3;--muted:#c9b79d;--line:#5a4231;--band:#1d130d;--band-2:#2a1c14;--on-band:#f3e7d3}.top{background:var(--band)}.top .wrap{min-height:76px}.brand{font-size:1.7rem}h1,h2{text-transform:none;font-weight:400;letter-spacing:0}h2{font-size:clamp(2.2rem,5vw,3.4rem)}.hero h1{font-style:normal}.btn{border-radius:2px}.btn.primary:hover{translate:0 -2px}.facts ul{background:var(--band-2);border-color:var(--line)}.facts svg{color:var(--signal)}.cards{display:grid;grid-template-columns:1fr 1fr;gap:0 56px;border:0}.cards li{display:block;background:none;border:0;border-top:3px double var(--muted);border-radius:0;padding:24px 0}.cards li:hover{border-color:var(--signal)}.cards .ico{display:none}.cards h3{font:400 1.7rem/1.2 var(--display)}.cards .more{grid-column:1/-1;background:var(--band);padding:26px}.why{background:#f3e7d3;color:#2a1c14}.why li{border-color:rgb(42 28 20/.2)}.why li:last-child{border-color:rgb(42 28 20/.2)}.why li svg{color:#9a4f10}.why .art{color:#9a4f10}.prices{background:none;border:0;padding:0}.prices table,.prices tbody,.prices tr{display:block}.prices tr{display:flex;align-items:baseline;border:0}.prices td{border:0;padding:12px 0}.prices td:first-child{order:1}.prices td:last-child{order:3;padding-left:0}.prices tr::after{content:"";order:2;flex:1;margin:0 12px;border-bottom:2px dotted var(--muted);opacity:.55;translate:0 -.3em}.prices td:last-child{font:400 1.5rem var(--display)}.alt{background:var(--band-2);border-color:var(--line)}.steps li{border-top:1px solid var(--muted)}.steps .ico svg,.steps li h3{color:var(--signal)}.estimate{background:#f3e7d3;color:#2a1c14;--muted:#6b5a45;--line:#cdb99b;--ink:#2a1c14;border:0}.contact{background:var(--band)}form{background:#f3e7d3;color:#2a1c14;--ink:#2a1c14;--muted:#6b5a45;--line:#d6c3a4;--bg:#fff8ea;box-shadow:none}.faq summary::after{color:var(--signal)}@media(max-width:700px){.cards{grid-template-columns:1fr}}</style>
+<script>if (/[?&]still/.test(location.search)) document.documentElement.className = 'still'; else if ('IntersectionObserver' in window) document.documentElement.className = 'js';</script>
 </head>
 <body>
 <svg hidden>

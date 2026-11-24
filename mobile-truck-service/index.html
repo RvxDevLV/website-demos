@@ -21,10 +21,6 @@
   --r: 4px; --shadow: 0 1px 2px rgb(20 38 43 / .06), 0 10px 30px rgb(20 38 43 / .09);
   --ease: cubic-bezier(.2, .7, .2, 1);
 }
-@media (prefers-color-scheme: dark) {
-  :root { --bg: #0f1a1d; --surface: #17272c; --ink: #e9efee; --muted: #9fb0b3; --line: #2b3f45;
-    --band: #0a1215; --band-2: #12212a; --shadow: 0 10px 30px rgb(0 0 0 / .4); color-scheme: dark; }
-}
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: 76px; }
 body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.6 var(--body); -webkit-font-smoothing: antialiased; }
@@ -223,10 +219,14 @@ footer p { opacity: .7; max-width: 46em; }
 .still *, .still *::before, .still *::after { animation: none !important; transition: none !important; }
 .still .art * { stroke-dashoffset: 0 !important; }
 .still .owner { display: none; }
+/* reduced motion (also what Windows "max performance" reports): keep fades and the line drawing, drop everything that travels, zooms or shakes */
+@keyframes fade { from { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  *, *::before, *::after { animation: none !important; transition: none !important; }
-  .art * { stroke-dashoffset: 0 !important; }
+  a.phone svg, .open-now i, .hero-bg, .hero-fig img, .hero-fig::before { animation: none !important; }
+  .hero .wrap > div > *, .estimate, .estimate tr, .facts ul, .map iframe, #sent { animation-name: fade !important; }
+  .js .rv, .js [data-stagger] > * { transform: none !important; }
+  .btn, .cards li, .shots img { translate: none !important; scale: none !important; }
 }
 
 @media (max-width: 900px) {
@@ -256,7 +256,7 @@ footer p { opacity: .7; max-width: 46em; }
 }
 </style>
 <style>:root{--band:#14262b;--band-2:#1c343a;--signal:#f2b705;--on-signal:#1b1602;--display:"Archivo",Arial,sans-serif}h1,h2,.brand,form h3{text-transform:none;letter-spacing:-.02em;font-weight:800}h1{font-size:clamp(2.2rem,5.4vw,3.8rem);line-height:1.04}h2{line-height:1.14}.brand{font-size:1.25rem}:root{--r:4px}@media(min-width:901px){.hero .wrap{grid-template-columns:.85fr 1.15fr}.hero .wrap>div{order:2}.hero::before{-webkit-mask-image:linear-gradient(255deg,transparent 35%,#000);mask-image:linear-gradient(255deg,transparent 35%,#000)}}.cards{display:block;border-top:1px solid var(--line)}.cards li{display:grid;grid-template-columns:34px minmax(0,1fr) minmax(0,1.3fr);gap:6px 22px;align-items:center;padding:20px 4px;background:none;border:0;border-bottom:1px solid var(--line);border-radius:0}.cards .ico{grid-row:auto}.cards .ico,.cards p{margin:0}.cards .more{display:flex;margin-top:22px;padding:24px;border-radius:var(--r);background:var(--band)}.cards .more:hover{translate:none}@media(max-width:640px){.cards li{grid-template-columns:34px 1fr}.cards li p{grid-column:2}}</style>
-<script>if (/[?&]still/.test(location.search)) document.documentElement.className = 'still'; else if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.className = 'js';</script>
+<script>if (/[?&]still/.test(location.search)) document.documentElement.className = 'still'; else if ('IntersectionObserver' in window) document.documentElement.className = 'js';</script>
 </head>
 <body>
 <svg hidden>

@@ -484,9 +484,9 @@ PHOTOSET = dict.fromkeys(["auto", "riepas", "virsbuve", "stikli", "gaze", "karba
 PHOTOSET.update(meistars="meistars", apkure="meistars", jumti="jumti", buve="buve", elektro="elektro", zobi="zobi", ziedi="ziedi", kafe="kafe", vet="vet")
 KEEP_LOOK = {"autoserviss", "bergs-serviss", "rem-sport"}  # pages already sent out keep their colours and layout
 # design, photo set, whole-page skin: the portfolio shows these side by side, so they span all three page styles
-GENERIC_LOOK = {"buvfirma": ("ramis", "jumti", "bloki"), "ziedu-salons": ("gaiss", "ziedi", "papirs"), "kafejnica": ("foto", "kafe", None),
-                "zobarstnieciba": ("gaiss", "zobi", "papirs"), "frizetava": ("zimejums", None, "bloki"), "veterinara-klinika": ("foto", "vet", None),
-                "apbedisanas-birojs": ("klasika", None, "papirs")}
+GENERIC_LOOK = {"buvfirma": ("ramis", "jumti", "bloki"), "ziedu-salons": ("gaiss", "ziedi", "papirs"), "kafejnica": ("centrs", "kafe", "tafele"),
+                "zobarstnieciba": ("gaiss", "zobi", "klinika"), "frizetava": ("zimejums", None, "studija"), "veterinara-klinika": ("ramis", "vet", "draugs"),
+                "apbedisanas-birojs": ("klasika", None, "miers")}
 FORCE_DESIGN = {"jumtu-serviss": "ramis"}  # override hash pick when two businesses would land on the same design
 
 # --variants: extra variants restyle the whole page, not just the hero, so the owner sees genuinely different sites
@@ -579,6 +579,131 @@ SKIN_CSS = {
         '.bar{background:var(--signal);border-top:2px solid var(--ink)}'
         '@media(max-width:900px){.facts li+li{border-left:0;border-top:2px solid var(--edge)}.why ul{grid-template-columns:1fr}}'),
 }
+# skins added for the generic demos (one family each, so the page keeps one voice)
+SKIN_FONTS.update({
+    "tafele": [FONTS["soft"][2]],
+    "klinika": [FONTS["clean"][1]],
+    "studija": [("Bodoni+Moda:ital,wght@0,500;0,700;1,500", '"Bodoni Moda",Georgia,serif', _T % ("-.02em", "500", "2.6rem,8vw,6.5rem", ".95", "1.3rem"))],
+    "draugs": [("Bricolage+Grotesque:wght@600;800", '"Bricolage Grotesque",Arial,sans-serif', _T % ("-.03em", "800", "2.3rem,6vw,4.4rem", "1", "1.25rem"))],
+    "miers": [("Cormorant+Garamond:wght@500;600", '"Cormorant Garamond",Georgia,serif', _T % ("0", "500", "2.6rem,6.4vw,4.6rem", "1.05", "1.45rem"))],
+})
+
+SKIN_CSS.update({
+    # cafe: chalkboard menu, centred hero, dotted leaders between dish and price
+    "tafele": (
+        ':root{--r:2px;--bg:#2a1c14;--surface:#33241a;--ink:#f3e7d3;--muted:#c9b79d;--line:#5a4231;--band:#1d130d;--band-2:#2a1c14;--on-band:#f3e7d3}'
+        '.top{background:var(--band)}.top .wrap{min-height:76px}.brand{font-size:1.7rem}'
+        'h1,h2{text-transform:none;font-weight:400;letter-spacing:0}h2{font-size:clamp(2.2rem,5vw,3.4rem)}.hero h1{font-style:normal}'
+        '.btn{border-radius:2px}.btn.primary:hover{translate:0 -2px}'
+        '.facts ul{background:var(--band-2);border-color:var(--line)}.facts svg{color:var(--signal)}'
+        '.cards{display:grid;grid-template-columns:1fr 1fr;gap:0 56px;border:0}'
+        '.cards li{display:block;background:none;border:0;border-top:3px double var(--muted);border-radius:0;padding:24px 0}.cards li:hover{border-color:var(--signal)}'
+        '.cards .ico{display:none}.cards h3{font:400 1.7rem/1.2 var(--display)}.cards .more{grid-column:1/-1;background:var(--band);padding:26px}'
+        '.why{background:#f3e7d3;color:#2a1c14}.why li{border-color:rgb(42 28 20/.2)}.why li:last-child{border-color:rgb(42 28 20/.2)}.why li svg{color:#9a4f10}.why .art{color:#9a4f10}'
+        '.prices{background:none;border:0;padding:0}.prices table,.prices tbody,.prices tr{display:block}'
+        '.prices tr{display:flex;align-items:baseline;border:0}.prices td{border:0;padding:12px 0}.prices td:first-child{order:1}.prices td:last-child{order:3;padding-left:0}'
+        '.prices tr::after{content:"";order:2;flex:1;margin:0 12px;border-bottom:2px dotted var(--muted);opacity:.55;translate:0 -.3em}'
+        '.prices td:last-child{font:400 1.5rem var(--display)}'
+        '.alt{background:var(--band-2);border-color:var(--line)}.steps li{border-top:1px solid var(--muted)}.steps .ico svg,.steps li h3{color:var(--signal)}'
+        '.estimate{background:#f3e7d3;color:#2a1c14;--muted:#6b5a45;--line:#cdb99b;--ink:#2a1c14;border:0}'
+        '.contact{background:var(--band)}form{background:#f3e7d3;color:#2a1c14;--ink:#2a1c14;--muted:#6b5a45;--line:#d6c3a4;--bg:#fff8ea;box-shadow:none}'
+        '.faq summary::after{color:var(--signal)}'
+        '@media(max-width:700px){.cards{grid-template-columns:1fr}}'),
+    # dental: clinical and airy, solid colour tiles, timeline for the steps
+    "klinika": (
+        ':root{--r:0;--bg:#f4f9f9;--surface:#fff;--ink:#0f2a33;--muted:#4f6b73;--line:#cfe0e2}'
+        '.top{background:var(--surface);color:var(--ink);border-bottom:1px solid var(--line)}.top nav a{opacity:.75}.top nav a::after{background:var(--ink)}'
+        '.phone{background:none;color:var(--ink);padding:6px 0;border-radius:0;border-bottom:2px solid var(--signal)}'
+        'h1,h2{text-transform:none;letter-spacing:-.035em;font-weight:800}.hero h1{font-size:clamp(2.3rem,5.4vw,4.6rem);line-height:.98;overflow-wrap:normal}'
+        '.hero-fig::before{background:none;border:1px solid var(--signal);inset:16px -16px -16px 16px}.hero-fig img{border-radius:0}'
+        '.btn{border-radius:0;border-width:1px}.btn.primary{background:var(--ink);border-color:var(--ink);color:var(--bg)}.btn.ghost{border-color:var(--ink)}'
+        '.facts{margin-top:0}.facts ul{background:none;border:0;border-radius:0;gap:28px}.facts li{flex-direction:column;align-items:flex-start;gap:6px;border:0!important;padding:18px 0 0;border-top:3px solid var(--ink)!important}'
+        '.facts svg{display:none}'
+        '.cards{gap:14px}.cards li{flex:1 1 220px;display:flex;flex-direction:column;justify-content:flex-end;min-height:170px;background:var(--band);color:var(--on-band);border:0;border-radius:0;transition:background .25s}'
+        '.cards li:hover{background:var(--band-2)}.cards .ico{display:none}.cards p{color:inherit;opacity:.75}.cards h3{font:800 1.3rem/1.2 var(--display)}'
+        '.cards .more{background:none;color:var(--ink);border:1px solid var(--ink)}.cards .more p{color:var(--muted);opacity:1}'
+        '.why{background:var(--surface);color:var(--ink);border-block:1px solid var(--line)}.why .art{display:none}.why .wrap{grid-template-columns:1fr}.why-head{position:static}'
+        '.why ul{display:grid;grid-template-columns:1fr 1fr;gap:0 56px}.why li,.why li:last-child{border:0;border-top:1px solid var(--line);padding:20px 0}.why li svg{color:var(--signal)}.why li p{opacity:1;color:var(--muted)}'
+        '.prices{border:0;background:none;padding:0;border-top:3px solid var(--ink)}.prices td:last-child{font:800 1.25rem var(--display)}'
+        '.alt{background:var(--bg);border:0}.steps{grid-template-columns:1fr;max-width:640px;gap:0;margin-top:30px}'
+        '.steps li{border:0;border-left:2px solid var(--line);padding:0 0 30px 32px;position:relative}.steps li::before{content:"";position:absolute;left:-7px;top:4px;width:12px;height:12px;background:var(--signal);border:2px solid var(--ink)}'
+        '.steps .ico{display:none}'
+        '.contact{background:var(--surface);color:var(--ink);border-top:1px solid var(--line)}.contact .info svg{color:var(--ink)}.hours,.hours div{border-color:var(--line)}.hours .now{color:var(--ink);font-weight:800}'
+        '.map{background:var(--bg)}form{background:var(--bg);box-shadow:none;border:1px solid var(--ink)}footer,.bar{background:var(--surface);color:var(--ink);border-top:1px solid var(--line)}'
+        '@media(max-width:900px){.why ul{grid-template-columns:1fr}}'),
+    # hair salon: dark glam, huge italic serif, running strip of services, list that moves on hover
+    "studija": (
+        ':root{--r:0;--bg:#16101a;--surface:#1f1726;--ink:#f4ebe6;--muted:#b7a9b4;--line:#3a2c43;--band:#0e0911;--band-2:#1f1726;--on-band:#f4ebe6}'
+        '.top{background:var(--bg);border-bottom:1px solid var(--line)}.top .wrap{min-height:80px}.top nav a{text-transform:uppercase;letter-spacing:.14em;font-size:.8rem}'
+        '.phone{border-radius:0;background:none;color:var(--signal);border:1px solid var(--signal)}'
+        'h1,h2{text-transform:none;font-style:italic;font-weight:500;letter-spacing:-.02em}h2{font-size:clamp(2.4rem,6vw,4.4rem)}'
+        '.hero h1{font-size:clamp(3.4rem,10vw,8.4rem);line-height:.9;overflow-wrap:normal}'
+        '.hero::after{content:"Sieviešu griezumi · Vīriešu griezumi · Matu krāsošana · Svētku frizūras · Manikīrs · Sieviešu griezumi · Vīriešu griezumi · Matu krāsošana · Svētku frizūras · Manikīrs · ";'
+        'display:block;position:absolute;inset:0 auto auto 0;height:auto;width:max-content;background:none;white-space:nowrap;font:500 .8rem var(--body);text-transform:uppercase;letter-spacing:.24em;'
+        'color:var(--signal);padding:14px 0;opacity:.8;animation:marq 60s linear infinite}'
+        '@keyframes marq{to{translate:-50% 0}}'
+        '.hero .wrap{padding-top:clamp(70px,8vw,110px)}'
+        '.btn{border-radius:0;border-width:1px;text-transform:uppercase;letter-spacing:.12em;font-size:.82rem;padding:15px 26px}.btn.primary{background:var(--signal)}'
+        '.facts ul{background:var(--surface);border:1px solid var(--line);border-radius:0}.facts svg{color:var(--signal)}'
+        '.cards{display:block;border-top:1px solid var(--line)}.cards li{display:grid;grid-template-columns:1fr 1.2fr;align-items:baseline;gap:6px 30px;background:none;border:0;border-bottom:1px solid var(--line);border-radius:0;padding:26px 0}'
+        '.cards .ico{display:none}.cards h3{font:500 clamp(1.5rem,3.6vw,2.4rem)/1.1 var(--display);font-style:italic;transition:translate .3s var(--ease),color .3s}'
+        '.cards li:hover h3{translate:14px 0;color:var(--signal)}.cards li:hover{border-color:var(--signal)}.cards .more{display:block;background:none;padding:26px 0}'
+        '.why{background:var(--signal);color:var(--on-signal)}.why .art{color:var(--on-signal);opacity:.9}.why li,.why li:last-child{border-color:rgb(0 0 0/.25)}.why li svg{color:var(--on-signal)}.why li p{opacity:.85}'
+        '.prices{background:none;border:0;padding:0}.prices td{border-color:var(--line)}.prices td:last-child{font:500 1.7rem var(--display);font-style:italic;color:var(--signal)}'
+        '.alt{background:var(--surface);border-color:var(--line)}.steps li{border-top:1px solid var(--signal)}.steps .ico svg{color:var(--signal)}'
+        '.contact{background:var(--band)}form{background:var(--surface);color:var(--ink);box-shadow:none;border:1px solid var(--signal)}'
+        'input,textarea{background:var(--bg);border-color:var(--line)}.map{background:var(--surface)}'
+        '@media(max-width:700px){.cards li{grid-template-columns:1fr}}'
+        '@media(prefers-reduced-motion:reduce){.hero::after{animation:none}.cards li:hover h3{translate:none}}'),
+    # vet: warm paper, sticker-like tiles with a folded corner, outlined step numbers
+    "draugs": (
+        ':root{--r:0;--bg:#fbf1dd;--surface:#fff8ea;--ink:#1d2b26;--muted:#5d675f;--line:#e3d4b4}'
+        'h1,h2{text-transform:none;letter-spacing:-.035em;font-weight:800}.hero h1{font-size:clamp(2.6rem,6.6vw,5.2rem);overflow-wrap:normal}'
+        '.top{background:var(--bg);color:var(--ink);border-bottom:2px solid var(--ink)}.top nav a{font-weight:600;opacity:1}.top nav a::after{background:var(--ink);height:3px}'
+        '.phone{border-radius:0;background:var(--signal);color:var(--on-signal);border:2px solid var(--ink)}'
+        '.btn{border-radius:0;border:2px solid var(--ink)}.btn.primary{background:var(--signal);color:var(--on-signal)}.btn.ghost{background:var(--surface);color:var(--ink)}.hero .btn.ghost{background:transparent;color:inherit;border-color:currentColor}'
+        '.facts ul{border:2px solid var(--ink);border-radius:0;background:var(--surface)}.facts li+li{border-color:var(--ink)}'
+        '.cards{gap:22px}.cards li{display:block;border:0;border-radius:0;padding:26px;background:var(--surface);'
+        'clip-path:polygon(0 0,calc(100% - 34px) 0,100% 34px,100% 100%,0 100%);transition:rotate .25s var(--ease),background .25s}'
+        '.cards li:nth-child(3n+1){background:var(--signal);color:var(--on-signal)}.cards li:nth-child(3n+1) p{color:inherit;opacity:.85}.cards li:nth-child(3n+1) .ico svg{color:var(--on-signal)}'
+        '.cards li:nth-child(3n+2){background:var(--band);color:var(--on-band)}.cards li:nth-child(3n+2) p{color:inherit;opacity:.8}'
+        '.cards li:hover{rotate:-1deg}.cards .ico{display:block;margin-bottom:12px}.cards .ico svg{width:30px;height:30px}.cards h3{font:800 1.3rem/1.2 var(--display)}'
+        '.cards .more{background:var(--surface);color:var(--ink);border:2px dashed var(--ink)}.cards .more p{color:var(--muted);opacity:1}'
+        '.why{background:var(--band)}.why li{border-color:rgb(255 255 255/.2)}'
+        '.prices{background:var(--surface);border:2px solid var(--ink);border-radius:0}.prices td{border-color:var(--line)}.prices td:last-child{font:800 1.3rem var(--display)}'
+        '.alt{background:var(--surface);border-block:2px solid var(--ink)}'
+        '.steps{counter-reset:s}.steps li{border-top:0;counter-increment:s;padding-top:0}.steps .ico{display:none}'
+        '.steps li::before{content:counter(s);display:block;font:800 5.5rem/.9 var(--display);color:transparent;-webkit-text-stroke:2px var(--ink);margin-bottom:10px}'
+        '.steps li:hover::before{color:var(--signal)}.steps li::before{transition:color .25s}'
+        '.contact{background:var(--band)}form{border:2px solid var(--ink);box-shadow:none;border-radius:0;background:var(--surface)}input,textarea{border:2px solid var(--ink);border-radius:0;background:var(--bg)}'
+        '.estimate{border:2px solid var(--ink);border-radius:0}footer{border-top:4px solid var(--signal)}'
+        '@media(prefers-reduced-motion:reduce){.cards li:hover{rotate:none}}'),
+    # funeral home: quiet and centred, narrow single column, roman numerals, slow fades
+    "miers": (
+        ':root{--r:0;--bg:#f4f2ee;--surface:#fbfaf7;--ink:#26303a;--muted:#5f6670;--line:#d9d4ca;--signal:#a58a5b;--on-signal:#fff}'
+        '.top{background:var(--bg);color:var(--ink);border-bottom:1px solid var(--line)}.top .wrap{justify-content:center;flex-direction:column;gap:10px;padding-block:18px}'
+        '.top nav{margin:0;gap:28px}.top nav a::after{background:var(--ink)}.brand{font-size:1.9rem}.phone{background:none;color:var(--ink);border-radius:0;padding:0;border-bottom:1px solid var(--signal)}'
+        'h1,h2{text-transform:none;font-weight:500;letter-spacing:0}h2{font-size:clamp(2rem,4.4vw,3rem)}'
+        '.hero{background:var(--bg);color:var(--ink)}.hero::before{display:none}'
+        '.hero .wrap{grid-template-columns:1fr;justify-items:center;text-align:center;max-width:820px;padding-block:clamp(56px,8vw,110px) clamp(70px,9vw,120px)}'
+        '.hero .lead,.tagline{margin-inline:auto}.hero .lead{opacity:1;color:var(--muted)}.cta-row{justify-content:center}.hero .estimate{width:100%;max-width:520px;text-align:left}'
+        '.btn{border-radius:0;border-width:1px}.btn.primary{background:var(--ink);border-color:var(--ink);color:var(--bg)}.btn.primary::after{content:none}.btn.ghost{border-color:var(--muted)}'
+        '.notice{border-left:0;border-bottom:1px solid var(--signal);padding:0 0 4px}'
+        '.facts{margin-top:0}.facts ul{background:none;border:0;border-block:1px solid var(--line);border-radius:0;grid-template-columns:repeat(3,1fr)}.facts li{justify-content:center;text-align:center}.facts svg{display:none}'
+        'section>.wrap{max-width:820px}.cards{display:block;border:0;margin-top:26px}.cards li{display:block;background:none;border:0;border-bottom:1px solid var(--line);border-radius:0;padding:22px 0;text-align:center}'
+        '.cards .ico{display:none}.cards h3{font:500 1.6rem/1.2 var(--display)}.cards .more{background:none;color:inherit;align-items:center}.cards .more a{border-bottom-color:var(--signal)}'
+        '.why{background:var(--surface);color:var(--ink);border-block:1px solid var(--line)}.why .wrap{grid-template-columns:1fr;text-align:center}.why-head{position:static}.why .art{display:none}'
+        '.why li{display:block;border-color:var(--line);padding:22px 0}.why li svg{display:none}.why li p{opacity:1;color:var(--muted)}.why li h3{font:500 1.5rem var(--display)}'
+        '.split{grid-template-columns:1fr}.split>div:first-child{position:static;text-align:center}.prices{background:none;border:0;border-top:1px solid var(--ink);padding:0;border-radius:0}.prices td:last-child{font:500 1.3rem var(--display)}'
+        '.alt{background:var(--bg);border:0}.steps{grid-template-columns:1fr;gap:0;counter-reset:r;text-align:center}.steps li{border-top:1px solid var(--line);padding:28px 0;counter-increment:r}'
+        '.steps .ico{display:none}.steps li::before{content:counter(r,upper-roman);display:block;font:500 1.6rem var(--display);color:var(--signal);margin-bottom:6px}.steps h3{font:500 1.5rem var(--display)}'
+        '.faq{margin-inline:auto}.contact{background:var(--surface);color:var(--ink);border-top:1px solid var(--line)}.contact .wrap{grid-template-columns:1fr}'
+        '.contact .info svg{color:var(--signal)}.hours,.hours div{border-color:var(--line)}.hours .now{color:var(--ink);font-weight:600}.map{background:var(--bg)}'
+        'form{box-shadow:none;border:1px solid var(--line);background:var(--bg);border-radius:0}input,textarea{border-radius:0;background:var(--surface)}footer,.bar{background:var(--bg);color:var(--ink);border-top:1px solid var(--line)}'
+        '.js .rv{transition-duration:1.4s}.hero .wrap>div>*{animation-duration:1.4s}'
+        '@media(max-width:700px){.facts ul{grid-template-columns:1fr}}'),
+})
+
 
 
 def look(slug, prof, vkey, generic, variant=0):
@@ -613,7 +738,7 @@ def look(slug, prof, vkey, generic, variant=0):
     band, band2, signal, on = pals[pi]
     css = f":root{{--band:{band};--band-2:{band2};--signal:{signal};--on-signal:{on};--display:{family}}}"
     if prof in BG:
-        css += f"@media(prefers-color-scheme:light){{:root{{--bg:{BG[prof]}}}}}"
+        css += f":root{{--bg:{BG[prof]}}}"
     css += fcss + (SHAPES[tone][si] if si is not None and not skin else "") + DESIGNS[design] + (MIRROR.get(design, "") if mirror else "") + (ROWS if rows else "") + SKIN_CSS.get(skin, "")
     first = (pick(slug, "foto", 3) + variant) % 3
     return dict(design=design, css=css, gf=gf, swap=swap,

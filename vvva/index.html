@@ -21,10 +21,6 @@
   --r: 4px; --shadow: 0 1px 2px rgb(20 38 43 / .06), 0 10px 30px rgb(20 38 43 / .09);
   --ease: cubic-bezier(.2, .7, .2, 1);
 }
-@media (prefers-color-scheme: dark) {
-  :root { --bg: #0f1a1d; --surface: #17272c; --ink: #e9efee; --muted: #9fb0b3; --line: #2b3f45;
-    --band: #0a1215; --band-2: #12212a; --shadow: 0 10px 30px rgb(0 0 0 / .4); color-scheme: dark; }
-}
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: 76px; }
 body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.6 var(--body); -webkit-font-smoothing: antialiased; }
@@ -223,10 +219,14 @@ footer p { opacity: .7; max-width: 46em; }
 .still *, .still *::before, .still *::after { animation: none !important; transition: none !important; }
 .still .art * { stroke-dashoffset: 0 !important; }
 .still .owner { display: none; }
+/* reduced motion (also what Windows "max performance" reports): keep fades and the line drawing, drop everything that travels, zooms or shakes */
+@keyframes fade { from { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  *, *::before, *::after { animation: none !important; transition: none !important; }
-  .art * { stroke-dashoffset: 0 !important; }
+  a.phone svg, .open-now i, .hero-bg, .hero-fig img, .hero-fig::before { animation: none !important; }
+  .hero .wrap > div > *, .estimate, .estimate tr, .facts ul, .map iframe, #sent { animation-name: fade !important; }
+  .js .rv, .js [data-stagger] > * { transform: none !important; }
+  .btn, .cards li, .shots img { translate: none !important; scale: none !important; }
 }
 
 @media (max-width: 900px) {
@@ -256,7 +256,7 @@ footer p { opacity: .7; max-width: 46em; }
 }
 </style>
 <style>:root{--band:#102a2a;--band-2:#1b4a47;--signal:#ffd166;--on-signal:#1b1602;--display:"Archivo",Arial,sans-serif}h1,h2,.brand,form h3{text-transform:none;letter-spacing:-.02em;font-weight:800}h1{font-size:clamp(2.2rem,5.4vw,3.8rem);line-height:1.04}h2{line-height:1.14}.brand{font-size:1.25rem}:root{--r:2px}.hero .art{width:min(100%,440px);margin:0 auto;opacity:.95;stroke-width:1.5}.hero .art *{stroke-dashoffset:1;transition:none;animation:draw 2.6s .4s cubic-bezier(.6,0,.2,1) forwards}.hero .art :nth-child(n+4){animation-delay:.9s}.hero .art :nth-child(n+7){animation-delay:1.3s}@keyframes draw{to{stroke-dashoffset:0}}.why .wrap{grid-template-columns:1fr}.why-head{position:static}.why ul{display:grid;grid-template-columns:1fr 1fr;gap:0 48px}.why li:nth-last-child(-n+2){border-bottom:1px solid rgb(255 255 255/.14)}@media(max-width:900px){.hero .art{width:230px;margin:0}.why ul{grid-template-columns:1fr}}</style>
-<script>if (/[?&]still/.test(location.search)) document.documentElement.className = 'still'; else if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.className = 'js';</script>
+<script>if (/[?&]still/.test(location.search)) document.documentElement.className = 'still'; else if ('IntersectionObserver' in window) document.documentElement.className = 'js';</script>
 </head>
 <body>
 <svg hidden>
