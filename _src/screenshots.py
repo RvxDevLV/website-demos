@@ -24,8 +24,11 @@ def shot(slug, w, h, scale=1):
 for key, slug in DEMOS.items():
     im = shot(slug, 1280, 2560).resize((900, 1800), Image.LANCZOS)
     im.save(ROOT / "assets" / f"paraugs-{key}.jpg", quality=72, optimize=True, progressive=True)
+    im.save(ROOT / "assets" / f"paraugs-{key}.webp", "WEBP", quality=90, method=6)  # served to browsers, jpg stays as fallback and for the README
+    im.resize((450, 900), Image.LANCZOS).save(ROOT / "assets" / f"paraugs-{key}-450.webp", "WEBP", quality=90, method=6)
     if key == "auto":  # social share image
         shot(slug, 1280, 672).resize((1200, 630), Image.LANCZOS).save(ROOT / "assets" / "paraugs.jpg", quality=80, optimize=True)
     print("saved", key)
 shot("autoserviss", 390, 844, 2).resize((390, 844), Image.LANCZOS).save(ROOT / "assets" / "paraugs-telefona.jpg", quality=78, optimize=True)
 print("saved phone")
+Image.open(ROOT / "assets" / "paraugs-telefona.jpg").save(ROOT / "assets" / "paraugs-telefona.webp", "WEBP", quality=90, method=6)

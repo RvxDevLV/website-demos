@@ -24,7 +24,7 @@
 @font-face { font-family: 'Archivo'; font-style: normal; font-weight: 400 900; font-stretch: 62% 125%; font-display: swap; src: url(assets/fonts/archivo-latin.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
 :root { --bg:#f1ead9; --paper:#f7f2e4; --ink:#12233f; --muted:#4d5a70; --hair:#b9b19b; --signal:#ff5a1f; --signal-text:#c23b08; --on-signal:#1b0a00;
   --wide:"Archivo",Arial,sans-serif; --body:"Archivo",Arial,sans-serif; interpolate-size:allow-keywords; }
-* { box-sizing:border-box; }
+* { box-sizing:border-box; } picture { display:contents; }
 html { scroll-behavior:smooth; scroll-padding-top:72px; }
 body { margin:0; background:var(--bg); color:var(--ink); font:400 17px/1.6 var(--body); font-stretch:100%; -webkit-font-smoothing:antialiased; counter-reset:sec; }
 img { max-width:100%; height:auto; display:block; } [hidden] { display:none !important; }
@@ -159,7 +159,7 @@ footer { background:var(--ink); color:var(--bg); border-top:1px solid rgb(241 23
         </div>
       </div>
       <figure>
-        <a class="shot" href="autoserviss/" aria-label="Atvērt autoservisa paraugu"><img src="assets/paraugs-auto.jpg" alt="Autoservisa mājaslapas paraugs" width="900" height="1800" fetchpriority="high"><span class="hint">Atvērt paraugu</span></a>
+        <a class="shot" href="autoserviss/" aria-label="Atvērt autoservisa paraugu"><picture><source type="image/webp" srcset="assets/paraugs-auto-450.webp 450w, assets/paraugs-auto.webp 900w" sizes="420px"><img src="assets/paraugs-auto.jpg" alt="Autoservisa mājaslapas paraugs" width="900" height="1800" fetchpriority="high"></picture><span class="hint">Atvērt paraugu</span></a>
         <figcaption>Autoservisa paraugs. Uzbrauciet ar peli, lai redzētu visu lapu.</figcaption>
       </figure>
     </div>
@@ -210,7 +210,7 @@ footer { background:var(--ink); color:var(--bg); border-top:1px solid rgb(241 23
         <li>Trīs mēnešus pēc publicēšanas izmaiņas bez maksas, arī dizaina un funkciju izmaiņas</li>
       </ul>
     </div>
-    <img class="phone-shot" src="assets/paraugs-telefona.jpg" alt="Parauga lapa telefonā" width="390" height="844" loading="lazy">
+    <picture><source type="image/webp" srcset="assets/paraugs-telefona.webp"><img class="phone-shot" src="assets/paraugs-telefona.jpg" alt="Parauga lapa telefonā" width="390" height="844" loading="lazy"></picture>
     </div>
   </div>
 </section>
@@ -234,14 +234,14 @@ footer { background:var(--ink); color:var(--bg); border-top:1px solid rgb(241 23
     <h2>Paraugi</h2>
     <p class="sub">Uzbrauciet ar peli uz attēla, lai redzētu visu lapu.</p>
     <div class="demos">
-      <a class="demo" style="--i:0" href="autoserviss/"><span class="shot"><img src="assets/paraugs-auto.jpg" alt="" width="900" height="1800" loading="lazy"></span><h3>Autoserviss</h3><p>Arī riepu servisiem, kravas auto servisiem, evakuatoriem un virsbūves darbnīcām.</p></a>
-      <a class="demo" style="--i:1" href="buvfirma/"><span class="shot"><img src="assets/paraugs-buve.jpg" alt="" width="900" height="1800" loading="lazy"></span><h3>Būvniecība un remonts</h3><p>Tāmes paraugs, darbu cenas un pieteikums objekta apskatei.</p></a>
-      <a class="demo" style="--i:2" href="ziedu-salons/"><span class="shot"><img src="assets/paraugs-ziedi.jpg" alt="" width="900" height="1800" loading="lazy"></span><h3>Ziedu salons</h3><p>Pušķu cenas, pasūtījuma forma, kāzu un sēru floristika.</p></a>
-      <a class="demo" style="--i:3" href="kafejnica/"><span class="shot"><img src="assets/paraugs-kafe.jpg" alt="" width="900" height="1800" loading="lazy"></span><h3>Kafejnīca</h3><p>Dienas piedāvājums, ēdienkarte ar cenām un banketu pieteikums.</p></a>
-      <a class="demo" style="--i:4" href="zobarstnieciba/"><span class="shot"><img src="assets/paraugs-zobi.jpg" alt="" width="900" height="1800" loading="lazy"></span><h3>Zobārstniecība</h3><p>Ārstēšanas plāna paraugs, cenas un pieraksts vizītei.</p></a>
-      <a class="demo" style="--i:5" href="frizetava/"><span class="shot"><img src="assets/paraugs-friz.jpg" alt="" width="900" height="1800" loading="lazy"></span><h3>Frizētava</h3><p>Pakalpojumi ar cenām un pieraksts sev ērtā laikā.</p></a>
-      <a class="demo" style="--i:6" href="veterinara-klinika/"><span class="shot"><img src="assets/paraugs-vet.jpg" alt="" width="900" height="1800" loading="lazy"></span><h3>Veterinārā klīnika</h3><p>Vizītes izmaksu paraugs, cenas un pieteikums vizītei.</p></a>
-      <a class="demo" style="--i:7" href="apbedisanas-birojs/"><span class="shot"><img src="assets/paraugs-beres.jpg" alt="" width="900" height="1800" loading="lazy"></span><h3>Apbedīšanas birojs</h3><p>Pakalpojumi, izmaksas un skaidri soļi grūtā brīdī.</p></a>
+      <a class="demo" style="--i:0" href="autoserviss/"><span class="shot"><picture><source type="image/webp" srcset="assets/paraugs-auto-450.webp 450w, assets/paraugs-auto.webp 900w" sizes="(min-width:901px) 260px, (min-width:481px) 45vw, 100vw"><img src="assets/paraugs-auto.jpg" alt="" width="900" height="1800" loading="lazy"></picture></span><h3>Autoserviss</h3><p>Arī riepu servisiem, kravas auto servisiem, evakuatoriem un virsbūves darbnīcām.</p></a>
+      <a class="demo" style="--i:1" href="buvfirma/"><span class="shot"><picture><source type="image/webp" srcset="assets/paraugs-buve-450.webp 450w, assets/paraugs-buve.webp 900w" sizes="(min-width:901px) 260px, (min-width:481px) 45vw, 100vw"><img src="assets/paraugs-buve.jpg" alt="" width="900" height="1800" loading="lazy"></picture></span><h3>Būvniecība un remonts</h3><p>Tāmes paraugs, darbu cenas un pieteikums objekta apskatei.</p></a>
+      <a class="demo" style="--i:2" href="ziedu-salons/"><span class="shot"><picture><source type="image/webp" srcset="assets/paraugs-ziedi-450.webp 450w, assets/paraugs-ziedi.webp 900w" sizes="(min-width:901px) 260px, (min-width:481px) 45vw, 100vw"><img src="assets/paraugs-ziedi.jpg" alt="" width="900" height="1800" loading="lazy"></picture></span><h3>Ziedu salons</h3><p>Pušķu cenas, pasūtījuma forma, kāzu un sēru floristika.</p></a>
+      <a class="demo" style="--i:3" href="kafejnica/"><span class="shot"><picture><source type="image/webp" srcset="assets/paraugs-kafe-450.webp 450w, assets/paraugs-kafe.webp 900w" sizes="(min-width:901px) 260px, (min-width:481px) 45vw, 100vw"><img src="assets/paraugs-kafe.jpg" alt="" width="900" height="1800" loading="lazy"></picture></span><h3>Kafejnīca</h3><p>Dienas piedāvājums, ēdienkarte ar cenām un banketu pieteikums.</p></a>
+      <a class="demo" style="--i:4" href="zobarstnieciba/"><span class="shot"><picture><source type="image/webp" srcset="assets/paraugs-zobi-450.webp 450w, assets/paraugs-zobi.webp 900w" sizes="(min-width:901px) 260px, (min-width:481px) 45vw, 100vw"><img src="assets/paraugs-zobi.jpg" alt="" width="900" height="1800" loading="lazy"></picture></span><h3>Zobārstniecība</h3><p>Ārstēšanas plāna paraugs, cenas un pieraksts vizītei.</p></a>
+      <a class="demo" style="--i:5" href="frizetava/"><span class="shot"><picture><source type="image/webp" srcset="assets/paraugs-friz-450.webp 450w, assets/paraugs-friz.webp 900w" sizes="(min-width:901px) 260px, (min-width:481px) 45vw, 100vw"><img src="assets/paraugs-friz.jpg" alt="" width="900" height="1800" loading="lazy"></picture></span><h3>Frizētava</h3><p>Pakalpojumi ar cenām un pieraksts sev ērtā laikā.</p></a>
+      <a class="demo" style="--i:6" href="veterinara-klinika/"><span class="shot"><picture><source type="image/webp" srcset="assets/paraugs-vet-450.webp 450w, assets/paraugs-vet.webp 900w" sizes="(min-width:901px) 260px, (min-width:481px) 45vw, 100vw"><img src="assets/paraugs-vet.jpg" alt="" width="900" height="1800" loading="lazy"></picture></span><h3>Veterinārā klīnika</h3><p>Vizītes izmaksu paraugs, cenas un pieteikums vizītei.</p></a>
+      <a class="demo" style="--i:7" href="apbedisanas-birojs/"><span class="shot"><picture><source type="image/webp" srcset="assets/paraugs-beres-450.webp 450w, assets/paraugs-beres.webp 900w" sizes="(min-width:901px) 260px, (min-width:481px) 45vw, 100vw"><img src="assets/paraugs-beres.jpg" alt="" width="900" height="1800" loading="lazy"></picture></span><h3>Apbedīšanas birojs</h3><p>Pakalpojumi, izmaksas un skaidri soļi grūtā brīdī.</p></a>
     </div>
     <p class="sub">Citai nozarei uztaisīšu atsevišķu paraugu. Uzrakstiet, ar ko nodarbojaties.</p>
   </div>

@@ -746,6 +746,17 @@ def look(slug, prof, vkey, generic, variant=0):
                 photos=[f"{photos}-{(first + i) % 3 + 1}" for i in range(3)] if photos else [])
 
 
+HB, FP, LZ = ' class="hero-bg"', ' fetchpriority="high"', ' loading="lazy"'
+
+
+def pic(src, cls="", sizes="100vw", small=False, extra=""):
+    """<picture>: WebP at two widths, the original JPEG as fallback. src is the .jpg path."""
+    base = src[:-4]
+    lo = (base[:-2] + "-s-400", 400, 800) if small else (base + "-800", 800, 1600)
+    return (f'<picture><source type="image/webp" srcset="{lo[0]}.webp {lo[1]}w, {base}.webp {lo[2]}w" sizes="{sizes}">'
+            f'<img{cls} src="{src}" alt=""{extra}></picture>')
+
+
 def apply_look(page, L, drawing, assets):
     """Rearrange the built page for its design: hero picture or drawing, sample estimate, photo row, section order."""
     page = page.replace("&family=Barlow+Condensed:wght@600;700", f"&family={L['gf']}" if L["gf"] else "")
@@ -755,11 +766,11 @@ def apply_look(page, L, drawing, assets):
         m = re.search(r'    <aside class="estimate".*?</aside>\n', page, flags=re.S)
         if d in ("foto", "centrs"):
             media = ""
-            page = page.replace('<section class="hero">\n', f'<section class="hero">\n  <img class="hero-bg" src="{assets}{ph[0]}.jpg" alt="" fetchpriority="high">\n', 1)
+            page = page.replace('<section class="hero">\n', f'<section class="hero">\n  {pic(f"{assets}{ph[0]}.jpg", HB, "100vw", extra=FP)}\n', 1)
         elif d == "zimejums":
             media = drawing.replace("      <svg", "    <svg", 1)
         else:
-            media = f'    <figure class="hero-fig"><img src="{assets}{ph[0]}.jpg" alt="" fetchpriority="high"></figure>\n'
+            media = f'    <figure class="hero-fig">{pic(f"{assets}{ph[0]}.jpg", "", "(min-width:901px) 600px, 100vw", extra=FP)}</figure>\n'
         page = page.replace(m.group(0), media, 1)
         est = m.group(0).replace("    <aside", "      <aside", 1).replace("    </aside>", "      </aside>", 1)
         page = page.replace('    </div>\n    <div class="prices rv">', est + '    </div>\n    <div class="prices rv">', 1)
@@ -768,7 +779,7 @@ def apply_look(page, L, drawing, assets):
         boxes = iter(used)
         def box(m):
             p = next(boxes, None)
-            return f'<figure><img src="{assets}{p}-s.jpg" alt="" loading="lazy"></figure>' if p else '<div><svg class="i"><use href="#cam"/></svg>Šeit būs jūsu foto</div>'
+            return f'<figure>{pic(f"{assets}{p}-s.jpg", "", "(min-width:901px) 560px, 100vw", small=True, extra=LZ)}</figure>' if p else '<div><svg class="i"><use href="#cam"/></svg>Šeit būs jūsu foto</div>'
         page = re.sub(r'(<div class="shots"[^>]*>\n)(.*?)(    </div>\n)',
                       lambda m: m.group(1) + re.sub(r"<div>.*?</div>", box, m.group(2)) + m.group(3)
                       + '    <p class="shots-note">Foto ir piemēri. Īstajā lapā būs jūsu pašu foto.</p>\n', page, count=1, flags=re.S)
