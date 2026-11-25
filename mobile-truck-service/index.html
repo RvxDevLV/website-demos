@@ -332,10 +332,14 @@ a.phone svg { animation: ring 6s 3s infinite; transform-origin: 50% 60%; }
 .hours .now { color: var(--signal); font-weight: 600; }
 .map { margin-top: 22px; min-height: 120px; background: rgb(255 255 255 / .06); border-radius: var(--r); overflow: hidden; display: grid; place-content: center; justify-items: center; gap: 10px; font-size: .95rem; padding: 14px; text-align: center; }
 .map a { display: inline-flex; align-items: center; gap: 6px; opacity: .85; }
-.map[data-auto] button { display: none; }
-.map.on { display: block; padding: 0; background: none; text-align: left; }
-.map iframe { display: block; width: 100%; height: 270px; border: 0; border-radius: var(--r); background: #dfe5e3; animation: rise .6s var(--ease) both; }
-.map.on a { margin-top: 10px; font-size: .92rem; }
+.map[data-geo] { display: block; min-height: 0; padding: 0; background: none; text-align: left; }
+.map-img { position: relative; display: block; aspect-ratio: 2 / 1; border-radius: var(--r); overflow: hidden; background: #dfe3e2; opacity: 1; }
+.map-img img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.map-img .pin { position: absolute; left: 50%; top: 50%; width: 44px; height: 44px; margin: -40px 0 0 -22px; color: var(--signal); fill: #fff; stroke-width: 1.6; filter: drop-shadow(0 2px 3px rgb(0 0 0 / .45)); }
+.map-addr { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 2px 18px; padding-top: 10px; }
+.map-addr span { display: flex; gap: 18px; }
+.map-addr a { min-height: 44px; font-weight: 600; text-underline-offset: 3px; }
+.map .credit { display: block; opacity: .55; font-size: .75rem; text-align: left; justify-self: start; }
 form { display: grid; gap: 14px; min-width: 0; background: var(--surface); color: var(--ink); border-radius: var(--r); padding: 28px; align-self: start; box-shadow: 0 18px 40px rgb(0 0 0 / .22); }
 form h3 { font: 700 1.6rem/1 var(--display); }
 label { font-size: .92rem; font-weight: 500; display: grid; gap: 6px; }
@@ -573,7 +577,7 @@ footer p { opacity: .7; max-width: 46em; }
         <div data-d="6"><span>Sestdiena</span><span>9.00–14.00</span></div>
         <div data-d="0"><span>Svētdiena</span><span>Slēgts</span></div>
       </div>
-      <div class="map" data-auto data-src="https://www.openstreetmap.org/export/embed.html?bbox=25.93751%2C56.50955%2C25.95951%2C56.52055&amp;layer=mapnik&amp;marker=56.51505%2C25.94851"><button type="button" class="btn ghost">Rādīt karti</button><a href="https://www.google.com/maps/search/?api=1&amp;query=56.515051786%2C25.948509084" target="_blank" rel="noopener"><svg class="i"><use href="#pin"/></svg>Atvērt Google kartē</a></div>
+      <div class="map" data-geo="56.515051786,25.948509084"><a class="map-img" href="https://www.google.com/maps/search/?api=1&amp;query=56.515051786%2C25.948509084" target="_blank" rel="noopener" aria-label="Atvērt Google kartē"><img src="karte.webp" alt="Karte: &quot;Meikšāni&quot;, Zīlāni, Kūku pagasts, Jēkabpils nov., LV-5222" width="1000" height="500" loading="lazy"><svg class="i pin"><use href="#pin"/></svg></a><div class="map-addr"><b>&quot;Meikšāni&quot;, Zīlāni, Kūku pagasts, Jēkabpils nov., LV-5222</b><span><a href="https://www.google.com/maps/search/?api=1&amp;query=56.515051786%2C25.948509084" target="_blank" rel="noopener">Atvērt Google kartē</a><a href="https://www.google.com/maps/dir/?api=1&amp;destination=56.515051786%2C25.948509084" target="_blank" rel="noopener">Maršruts</a></span></div><small class="credit">Karte © OpenStreetMap</small></div>
     </div>
     <form id="req" class="rv">
       <h3>Uzrakstiet mums</h3>
