@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/avatar.png" width="88" alt="Raivo">
+<img src="assets/brand/favicon.svg" width="88" alt="RVX">
 
 # Mājaslapas vietējiem uzņēmumiem
 
