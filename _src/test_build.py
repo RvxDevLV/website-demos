@@ -16,7 +16,23 @@ for p in sorted(ROOT.glob("*/index.html")):
     else:
         assert 'name="robots" content="noindex"' in h, f"{p.parent.name}: noindex missing"
     assert "demo-note" in h, f"{p.parent.name}: sample note missing"
+    assert 'id="sent" role="status"' in h, f"{p.parent.name}: the form's result message must be announced to screen readers (role=status)"
     assert "{{" not in h, f"{p.parent.name}: placeholder left"
+
+# 3. every page (also the portfolio and the privacy page): robots meta, a policy that lists exactly the inline scripts the page has
+sys.path.insert(0, str(ROOT / "_src"))
+from security import INLINE, script_hash
+for p in [ROOT / "index.html", ROOT / "privatums.html", *sorted(ROOT.glob("*/index.html"))]:
+    h, name = p.read_text(encoding="utf-8"), p.relative_to(ROOT).as_posix()
+    robots = re.search(r'<meta name="robots" content="([^"]*)"', h)
+    assert robots, f"{name}: robots meta missing"
+    want = "index" if name == "index.html" or p.parent.name in GENERIC else "noindex"  # portfolio and the eight samples are indexed, the rest is not
+    assert robots.group(1).startswith(want), f"{name}: robots is {robots.group(1)!r}, expected {want}"
+    csp = re.search(r'http-equiv="Content-Security-Policy" content="([^"]*)"', h)
+    assert csp, f"{name}: Content-Security-Policy missing, run python _src/security.py {name}"
+    for s in INLINE.findall(h):
+        assert script_hash(s) in csp.group(1), f"{name}: an inline script changed, run python _src/security.py {name}"
+    assert 'name="referrer"' in h, f"{name}: referrer policy missing"
 
 if PRIV.is_dir():
     mine = [s[0] for s in runpy.run_path(str(PRIV / "shops.py"))["SHOPS"] if (ROOT / s[0] / "index.html").exists() and s[0] not in KEEP_LOOK]

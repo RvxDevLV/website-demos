@@ -2,9 +2,12 @@
 <html lang="lv">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-Du+OJKJSbdUgz5nrHeWWINvez6XKDDU/tyj/5c2uvwo=' 'sha256-znyEeZmBRqSmjP4jX/YRhgP6zVW7wuYtyxaZkvg82JA=' 'sha256-/EN2Gzh00KuVeCxtUR86mLjZqQmsfE6MKdUwzUc8pP0='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://api.web3forms.com; base-uri 'none'; form-action 'self'; object-src 'none'; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mājaslapu izstrāde mazajiem uzņēmumiem · Raivo Harkovs</title>
 <meta name="description" content="Mājaslapu izstrāde mazajiem uzņēmumiem visā Latvijā. Vienkārša, ātra lapa, ko atrod Google. Paraugu saņemat pirms maksāšanas.">
+<meta name="robots" content="index,follow,max-image-preview:large">
 <meta name="google-site-verification" content="MuPMLRMOoWyKZrq3GKZqLdTdHu_sxeqenImr6xskeXo">
 <link rel="canonical" href="https://rvxdevlv.github.io/website-demos/">
 <meta property="og:type" content="website">
@@ -118,6 +121,11 @@ p { margin:0; } a { color:inherit; }
 .faq details p { color:var(--muted); padding:0 40px 18px 0; max-width:46em; }
 
 .contact .who { display:flex; gap:28px; align-items:flex-start; } .contact img { width:96px; height:96px; object-fit:cover; flex:none; filter:grayscale(1) contrast(1.1); }
+.msg { margin-top:32px; max-width:560px; display:grid; gap:14px; } .msg h3 { font:800 1.3rem var(--wide); margin:0; }
+.msg label { display:grid; gap:6px; font-weight:600; } .msg input:not([type=hidden]):not(.hp), .msg textarea { font:400 1rem var(--body); width:100%; padding:12px; border:2px solid rgb(241 234 217/.45); border-radius:0; background:rgb(241 234 217/.08); color:var(--bg); }
+.msg input:focus, .msg textarea:focus { outline:3px solid var(--signal); outline-offset:2px; } .msg .btn { justify-self:start; cursor:pointer; } .msg .btn:disabled { opacity:.6; cursor:wait; }
+.msg .fine { font-size:.85rem; opacity:.8; margin:0; } .msg a { color:inherit; } #msg-st { margin:0; font-weight:600; }
+.hp { position:absolute; left:-9999px; width:1px; height:1px; opacity:0; }
 footer { background:var(--ink); color:var(--bg); border-top:1px solid rgb(241 234 217/.25); } footer .wrap { padding-block:22px; font-size:.9rem; opacity:.7; }
 
 /* phone menu: shown only when the browser is narrow and JavaScript can run; without JS the links stay visible in a row */
@@ -169,7 +177,7 @@ footer { background:var(--ink); color:var(--bg); border-top:1px solid rgb(241 23
         <p class="lead">Vispirms izveidoju paraugu ar jūsu uzņēmuma nosaukumu un pakalpojumiem. Jūs to aplūkojat un izlemjat. Par paraugu nav jāmaksā. Ja paraugs der, ievietoju jūsu tekstus, cenas un foto, un lapa ir gatava. Paraugā var mainīt jebko un pielāgot jūsu vēlmēm: tekstus, krāsas, attēlus, izkārtojumu un sadaļas.</p>
         <div class="free">
           <span class="tag"><b>0 €</b><span>pirmajiem 5 klientiem</span></span>
-          <p><b>Pirmie 5 klienti mājaslapu saņem bez maksas</b>, apmaiņā pret godīgu atsauksmi par sadarbību.</p>
+          <p><b>Pirmie 5 klienti mājaslapu saņem bez maksas</b> apmaiņā pret godīgu atsauksmi par sadarbību.</p>
         </div>
         <div class="cta-row">
           <a class="btn" href="#paraugi">Aplūkot paraugus</a>
@@ -186,7 +194,7 @@ footer { background:var(--ink); color:var(--bg); border-top:1px solid rgb(241 23
 
 <div class="note">
   <div class="wrap">
-    <p><b>Ja saņēmāt no manis paraugu:</b> lapa, ko jums atsūtīju, ir mājaslapas paraugs tieši jūsu uzņēmumam, jau ar jūsu nosaukumu un pakalpojumiem. Teksti, cenas, tālrunis un adrese tajā ir piemēri, līdz jūs sniedzat man īstos. Tajā var mainīt jebko: tekstus, krāsas, attēlus un izkārtojumu. Paraugu, kas sagatavots jūsu uzņēmumam, redz tikai tie, kam ir saite.</p>
+    <p><b>Ja saņēmāt no manis paraugu:</b> lapa, ko jums atsūtīju, ir mājaslapas paraugs tieši jūsu uzņēmumam, jau ar jūsu nosaukumu un pakalpojumiem. Teksti, cenas, tālrunis un adrese tajā ir piemēri, līdz jūs sniedzat man īstos. Tajā var mainīt jebko: tekstus, krāsas, attēlus un izkārtojumu. Paraugu, kas sagatavots jūsu uzņēmumam, Google nerāda, un saiti uz to nosūtu tikai jums.</p>
   </div>
 </div>
 
@@ -220,10 +228,10 @@ footer { background:var(--ink); color:var(--bg); border-top:1px solid rgb(241 23
       <li>Viena pārskatāma lapa: pakalpojumi, cenas, darba laiks, kontakti</li>
       <li>Dizains, teksti, krāsas un attēli tiek pielāgoti jūsu vēlmēm, nevis ņemti gatavi</li>
       <li>Lapa labi izskatās un ātri atveras jebkurā ierīcē: telefonā, planšetē un datorā</li>
-      <li>Sagatavota Google meklētājam: nosaukums, pilsēta, pakalpojumi un darba laiks ir norādīti tā, lai meklētājs tos saprot</li>
+      <li>Sagatavota Google meklētājam: nosaukums, pilsēta, pakalpojumi un darba laiks ir norādīti tā, lai meklētājs tos saprastu</li>
       <li>Pieteikuma forma, kuras ziņas nonāk jūsu e-pastā</li>
       <li>Palīdzība ar uzņēmuma profilu Google kartē: adrese, darba laiks, tālrunis, foto un atsauksmes, ko cilvēki redz meklētājā un kartē</li>
-      <li>Palīdzība ar mājaslapu: adrese (domēns), piemēram, jusuuznemums.lv. Domēns maksā aptuveni 10–20 € gadā, un to apmaksā uzņēmums</li>
+      <li>Palīdzība ar mājaslapu: adrese (domēns), piemēram, jusuuznemums.lv. Domēns maksā aptuveni 10-20 € gadā, un to apmaksā uzņēmums</li>
       <li>Mājaslapas glabāšana (hostings) pirmajā gadā ir iekļauta cenā</li>
       <li>Trīs mēnešus pēc mājaslapas publicēšanas jebkuras izmaiņas ir bez maksas</li>
     </ul>
@@ -268,12 +276,15 @@ footer { background:var(--ink); color:var(--bg); border-top:1px solid rgb(241 23
 <section class="sec">
   <div class="wrap faq">
     <h2>Jautājumi un atbildes</h2>
-    <details><summary>Cik tas maksā?</summary><p>Pirmie 5 klienti pilnu mājaslapu saņem bez maksas, apmaiņā pret godīgu atsauksmi. Pēc tam viena mājaslapa maksā no 100 €. Precīzu cenu nosaucu pirms darba, un tā ir gala cena, kas vairs nemainās.</p></details>
+    <details><summary>Cik tas maksā?</summary><p>Pirmie 5 klienti pilnu mājaslapu saņem bez maksas apmaiņā pret godīgu atsauksmi. Pēc tam viena mājaslapa maksā no 100 €. Precīzu cenu nosaucu pirms darba, un tā ir gala cena, kas vairs nemainās.</p></details>
     <details><summary>Vai jāmaksā par uzturēšanu?</summary><p>Nē, tas nav obligāti. Pirmos trīs mēnešus pēc publicēšanas izmaiņas ir bez maksas. Pēc tam, ja vēlaties, lai es turpinu rūpēties par mājaslapu, uzturēšana maksā 15 € mēnesī: atjauninājumi, drošība un nelielas izmaiņas.</p></details>
     <details><summary>Kas man jāsagatavo?</summary><p>Pakalpojumu saraksts, cenas, darba laiks, kontakti un dažas fotogrāfijas, ja ir. Tekstus palīdzu noformulēt.</p></details>
-    <details><summary>Vai paraugu redz arī citi?</summary><p>Astoņus vispārīgos paraugus (autoserviss, ziedu salons un citi) var atrast arī Google. Paraugu, kas sagatavots tieši jūsu uzņēmumam, redz tikai tie, kam ir saite, un Google to nerāda. Meklēšanā parādīsies jūsu īstā lapa.</p></details>
-    <details><summary>Vai būšu pirmajā vietā Google?</summary><p>To godīgi apsolīt nevar neviens. Lapu sagatavoju tā, lai meklētājs saprot, kas jūs esat un kur atrodaties, un piesaku to Google. Bez mājaslapas jūsu tur vispār nav. Esmu apguvis kursu «Digitālais mārketings», kurā mācījos, kā panākt, lai mājaslapa parādās Google meklēšanas rezultātos augstāk (<a href="assets/aplieciba-digitalais-marketings.pdf" target="_blank" rel="noopener">aplūkot apliecību</a>).</p></details>
-    <details><summary>Kā notiek sadarbība?</summary><p>Visu var nokārtot e-pastā vai pa tālruni, jums ērtā laikā. Pirms darba vienojamies rakstiski, kas tiek darīts un kad, lai abiem viss ir skaidrs.</p></details>
+    <details><summary>Kas ir domēns?</summary><p>Domēns ir jūsu mājaslapas adrese internetā, piemēram, jusuuznemums.lv. Tā ir kā ielas nosaukums, pēc kura klienti jūs atrod. Domēnu reģistrē uz jūsu uzņēmumu, tāpēc tas ir jūsu īpašums.</p></details>
+    <details><summary>Kas ir hostings?</summary><p>Hostings ir vieta, kur glabājas jūsu mājaslapa, lai to varētu atvērt jebkurš cilvēks jebkurā laikā. Pirmajā gadā hostings ir iekļauts cenā.</p></details>
+    <details><summary>Vai nevar pašam uztaisīt ar Wix vai mākslīgo intelektu?</summary><p>Var, un vienkāršai lapai tādi rīki der. Atšķirība ir tā, ka es visu izdaru jūsu vietā: sagatavoju paraugu, ievietoju jūsu cenas un foto, sakārtoju Google uzņēmuma kartīti. Lapa ir parasta un pilnībā jūsu, visi faili paliek jums, un jebkurā brīdī varat izvēlēties citu izstrādātāju.</p></details>
+    <details><summary>Vai paraugu redz arī citi?</summary><p>Astoņus vispārīgos paraugus (autoserviss, ziedu salons un citi) var atrast arī Google. Paraugu, kas sagatavots tieši jūsu uzņēmumam, Google nerāda, un saiti uz to nosūtu tikai jums. Meklēšanā parādīsies jūsu īstā lapa.</p></details>
+    <details><summary>Vai būšu pirmajā vietā Google?</summary><p>To godīgi apsolīt nevar neviens. Lapu sagatavoju tā, lai meklētājs saprastu, kas jūs esat un kur atrodaties, un piesaku to Google. Bez mājaslapas jūsu tur vispār nav. Esmu apguvis kursu «Digitālais mārketings», kurā mācījos, kā panākt, lai mājaslapa parādītos Google meklēšanas rezultātos augstāk (<a href="assets/aplieciba-digitalais-marketings.pdf" target="_blank" rel="noopener">aplūkot apliecību</a>).</p></details>
+    <details><summary>Kā notiek sadarbība?</summary><p>Visu var nokārtot e-pastā vai pa tālruni, jums ērtā laikā. Pirms darba vienojamies rakstiski, kas tiek darīts un kad, lai abiem viss ir skaidrs. Gatavu lapu parasti sagatavoju trīs darba dienu laikā pēc tam, kad esmu saņēmis jūsu cenas un foto.</p></details>
   </div>
 </section>
 
@@ -285,6 +296,20 @@ footer { background:var(--ink); color:var(--bg); border-top:1px solid rgb(241 23
       <p class="sub">Atbildiet uz e-pastu, ko jums nosūtīju, vai uzrakstiet, ko vēlaties mainīt paraugā. Ja jums ir jautājumi par to, kā notiek sadarbība, labprāt uz tiem atbildēšu. Atbildu tajā pašā vai nākamajā darba dienā.</p>
       <p class="sub">Esmu apguvis kursu «Digitālais mārketings» (120 akadēmiskās stundas, Inovatīvo Tehnoloģiju Aģentūra, 2023). <a href="assets/aplieciba-digitalais-marketings.pdf" target="_blank" rel="noopener">Aplūkot apliecību</a></p>
     </div></div>
+    <form id="msg" class="msg" hidden>
+      <h3>Uzrakstiet man</h3>
+      <input type="hidden" name="access_key" value="">
+      <input type="hidden" name="subject" value="Ziņa no mājaslapas">
+      <input type="hidden" name="from_name" value="Portfolio lapa">
+      <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <label for="m-name">Vārds<input id="m-name" name="name" required maxlength="80" autocomplete="name"></label>
+      <label for="m-contact">E-pasts vai tālrunis<input id="m-contact" name="contact" required maxlength="80" autocomplete="email"></label>
+      <label for="m-text">Ziņa<textarea id="m-text" name="message" required minlength="10" maxlength="1000" rows="5"></textarea></label>
+      <button class="btn" type="submit">Nosūtīt</button>
+      <p class="fine">Nospiežot «Nosūtīt», piekrītat, ka jūsu ziņa tiek nosūtīta man, izmantojot tīmekļa veidlapu pakalpojumu Web3Forms. <a href="privatums.html">Privātuma informācija</a></p>
+      <p id="msg-st" role="status" hidden></p>
+    </form>
   </div>
 </section>
 
@@ -333,6 +358,45 @@ new IntersectionObserver(function (es, o) {
     });
   });
 }, { threshold: .4 }).observe(document.querySelector('.scores'));
+</script>
+<script>
+// message form: stays hidden until a Web3Forms key is set (get one free at web3forms.com, it is sent to your e-mail; the key is meant to be public)
+var FORM_KEY = '';
+// spam-filter:start
+function spamReason(v, ms) {
+  if (v.website || v.botcheck) return 'bot';                              // hidden fields that only a bot fills
+  if (ms < 3000) return 'fast';                                           // typed and sent in under 3 seconds
+  var all = v.name + ' ' + v.contact + ' ' + v.message;
+  if ((all.match(/https?:\/\/|www\./gi) || []).length > 1) return 'links';
+  if (v.message.trim().length < 10 || v.message.length > 1000) return 'length';
+  if (!/^\S+@\S+\.\S+$/.test(v.contact.trim()) && v.contact.replace(/\D/g, '').length < 8) return 'contact';
+  if (/(.)\1{9,}/.test(all)) return 'repeat';                             // aaaaaaaaaa
+  return '';
+}
+// spam-filter:end
+(function () {
+  var f = document.getElementById('msg');
+  if (!f || !FORM_KEY) return;
+  f.hidden = false;
+  f.elements.access_key.value = FORM_KEY;
+  var st = document.getElementById('msg-st'), t0 = 0, say = function (t) { st.textContent = t; st.hidden = false; };
+  f.addEventListener('input', function () { if (!t0) t0 = Date.now(); });
+  f.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var v = { name: f.elements.name.value, contact: f.elements.contact.value, message: f.elements.message.value,
+              website: f.elements.website.value, botcheck: f.elements.botcheck.checked }, why = spamReason(v, t0 ? Date.now() - t0 : 0);
+    if (why == 'bot') { f.reset(); t0 = 0; return say('Paldies! Ziņa nosūtīta.'); }   // a bot gets no hint
+    if (why == 'fast') return say('Lūdzu, pagaidiet dažas sekundes un vēlreiz nospiediet «Nosūtīt».');   // a person pasting a ready message must not lose it
+    if (why) return say(why == 'length' ? 'Ziņai jābūt no 10 līdz 1000 rakstzīmēm.' : why == 'contact' ? 'Ierakstiet e-pasta adresi vai tālruņa numuru.' : 'Ziņā ir pārāk daudz saišu vai atkārtotu simbolu.');
+    try { if (Date.now() - (+localStorage.getItem('msgAt') || 0) < 60000) return say('Lūdzu, pagaidiet minūti pirms nākamās ziņas.'); } catch (x) {}
+    var b = f.querySelector('button[type=submit]'); b.disabled = true;
+    fetch('https://api.web3forms.com/submit', { method: 'POST', body: new FormData(f) })
+      .then(function (r) { return r.json(); })
+      .then(function (d) { if (!d.success) throw 0; f.reset(); t0 = 0; try { localStorage.setItem('msgAt', Date.now()); } catch (x) {} say('Paldies! Ziņa nosūtīta, atbildēšu darba dienā.'); })
+      .catch(function () { say('Neizdevās nosūtīt. Lūdzu, mēģiniet vēlāk.'); })
+      .finally(function () { b.disabled = false; });
+  });
+})();
 </script>
 </body>
 </html>

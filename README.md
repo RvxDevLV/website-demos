@@ -29,29 +29,29 @@ Katrai nozarei ir savs izskats, teksti un cenrādis. Spiediet uz attēla, lai at
 <tr><td align="center" width="33%"><a href="https://rvxdevlv.github.io/website-demos/veterinara-klinika/"><img src="assets/paraugs-vet.jpg" alt="Veterinārā klīnika"><br><b>Veterinārā klīnika</b></a></td><td align="center" width="33%"><a href="https://rvxdevlv.github.io/website-demos/buvfirma/"><img src="assets/paraugs-buve.jpg" alt="Būvniecība un remonts"><br><b>Būvniecība un remonts</b></a></td><td></td></tr>
 </table>
 
-Ja saņēmāt no manis e-pastu, tajā ir saite uz paraugu, kas sagatavots tieši jūsu uzņēmumam. Šo paraugu redz tikai tie, kam ir saite.
+Ja saņēmāt no manis e-pastu, tajā ir saite uz paraugu, kas sagatavots tieši jūsu uzņēmumam. Google šo paraugu nerāda, un saiti uz to nosūtu tikai jums.
 
 ## Jūs atrod Google
 
-Kad salūst auto, cilvēks telefonā ieraksta “autoserviss” un savu pilsētu. Katrs paraugs ir pielāgots tam, ko jūs darāt. Lapa ir veidota tā, lai meklētājs saprot, kas jūs esat un kur atrodaties, un lai potenciālie klienti jūs var ieraudzīt:
+Kad salūst auto, cilvēks telefonā ieraksta “autoserviss” un savu pilsētu. Katrs paraugs ir pielāgots tam, ko jūs darāt. Lapa ir veidota tā, lai meklētājs saprastu, kas jūs esat un kur atrodaties, un lai potenciālie klienti jūs varētu ieraudzīt:
 
 - virsrakstā un aprakstā ir jūsu pakalpojums un pilsēta, tieši tā, kā cilvēki meklē
 - nosaukums, atrašanās vieta un pakalpojumi ir pierakstīti arī meklētājam saprotamā formātā
 - lapa ātri atveras un labi izskatās telefonā, un Google to ņem vērā
-- pēc nodošanas piesaku lapu Google, lai tā parādās meklēšanā
-- palīdzu izveidot vai sakārtot Google uzņēmuma profilu, lai jūs parādāties arī Google Maps ar adresi, darba laiku un tālruni
+- pēc nodošanas piesaku lapu Google, lai tā parādītos meklēšanā
+- palīdzu izveidot vai sakārtot Google uzņēmuma profilu, lai jūs parādītos arī Google Maps ar adresi, darba laiku un tālruni
 
-Vietu Google rezultātos neviens godīgi apsolīt nevar. Bet bez mājaslapas jūs tur nav vispār.
+Vietu Google rezultātos neviens godīgi apsolīt nevar. Bet bez mājaslapas jūsu tur vispār nav.
 
-> Astoņus vispārīgos paraugus var atrast arī Google. Paraugu, kas sagatavots tieši jūsu uzņēmumam, Google nerāda, un to redz tikai tie, kam ir saite. Meklēšanā parādīsies jūsu īstā lapa.
+> Astoņus vispārīgos paraugus var atrast arī Google. Paraugu, kas sagatavots tieši jūsu uzņēmumam, Google nerāda, un saiti uz to nosūtu tikai jums. Meklēšanā parādīsies jūsu īstā lapa.
 
 > **Pirmajiem 5 klientiem:** lapa bez maksas, ja pēc tam atļaujat publicēt jūsu godīgu atsauksmi.
 
 ## Kā tas notiek
 
-| 1. Apskatāt paraugu | 2. Pasakāt, ko mainīt | 3. Maksājat, kad patīk |
+| 1. Aplūkojiet paraugu | 2. Pasakiet, ko mainīt | 3. Maksājiet, kad patīk |
 |:--|:--|:--|
-| Bez maksas un bez saistībām. Ja nepatīk, vienkārši neatbildiet. | Atrakstiet e-pastā, un ielieku jūsu cenas, foto, darba laiku un kontaktus. | Cena no 100 €, zināma iepriekš. Maksājat tikai par gatavu lapu. |
+| Bez maksas un bez saistībām. Ja nepatīk, vienkārši neatbildiet. | Atrakstiet e-pastā, un ielikšu jūsu cenas, foto, darba laiku un kontaktus. | Cena no 100 €, zināma iepriekš. Maksājat tikai par gatavu lapu. |
 
 ## Arī telefonā
 

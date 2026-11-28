@@ -2,8 +2,11 @@
 <html lang="lv">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-hwRoyGepKBTipxoMYLaQ4jN7nuRGmBE6e/3n04JPcxI=' 'sha256-skypIQJuKpkLuRUaL6fg6qdID3JCrYI0s18BW8eCbpI='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'self'; object-src 'none'; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Jūsu Būvfirma · mājaslapas paraugs</title>
+<meta name="robots" content="index,follow">
 <link rel="canonical" href="https://rvxdevlv.github.io/website-demos/buvfirma/">
 <meta name="description" content="Mājaslapas paraugs uzņēmumam Jūsu Būvfirma. Cenas un kontakti ir piemēri.">
 <meta name="theme-color" content="#14262b">
@@ -307,15 +310,21 @@ a.phone svg { animation: ring 6s 3s infinite; transform-origin: 50% 60%; }
 .hours .now { color: var(--signal); font-weight: 600; }
 .map { margin-top: 22px; min-height: 120px; background: rgb(255 255 255 / .06); border-radius: var(--r); overflow: hidden; display: grid; place-content: center; justify-items: center; gap: 10px; font-size: .95rem; padding: 14px; text-align: center; }
 .map a { display: inline-flex; align-items: center; gap: 6px; opacity: .85; }
-.map[data-auto] button { display: none; }
-.map.on { display: block; padding: 0; background: none; text-align: left; }
-.map iframe { display: block; width: 100%; height: 270px; border: 0; border-radius: var(--r); background: #dfe5e3; animation: rise .6s var(--ease) both; }
-.map.on a { margin-top: 10px; font-size: .92rem; }
+.map.plain { display: block; min-height: 0; padding: 0; background: none; text-align: left; }
+.map.plain .map-addr { padding-top: 0; justify-content: flex-start; }
+.map[data-geo] { display: block; min-height: 0; padding: 0; background: none; text-align: left; }
+.map a.map-img { position: relative; display: block; aspect-ratio: 2 / 1; border-radius: var(--r); overflow: hidden; background: #dfe3e2; opacity: 1; }
+.map-img img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.map-img .pin { position: absolute; left: 50%; top: 50%; width: 44px; height: 44px; margin: -40px 0 0 -22px; color: var(--signal); fill: #fff; stroke-width: 1.6; filter: drop-shadow(0 2px 3px rgb(0 0 0 / .45)); }
+.map-addr { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 2px 18px; padding-top: 10px; }
+.map-addr span { display: flex; gap: 18px; }
+.map-addr a { min-height: 44px; font-weight: 600; text-underline-offset: 3px; }
+.map .credit { display: block; opacity: .55; font-size: .75rem; text-align: left; justify-self: start; }
 form { display: grid; gap: 14px; min-width: 0; background: var(--surface); color: var(--ink); border-radius: var(--r); padding: 28px; align-self: start; box-shadow: 0 18px 40px rgb(0 0 0 / .22); }
 form h3 { font: 700 1.6rem/1 var(--display); }
 label { font-size: .92rem; font-weight: 500; display: grid; gap: 6px; }
 input, textarea { font: inherit; padding: 12px 13px; border-radius: var(--r); border: 1px solid var(--line); background: var(--bg); color: var(--ink); width: 100%; transition: border-color .15s, box-shadow .15s; }
-input:focus, textarea:focus { outline: none; border-color: var(--ink); box-shadow: 0 0 0 3px color-mix(in srgb, var(--signal) 45%, transparent); }
+input:focus, textarea:focus { outline: 3px solid transparent; /* shows in Windows high-contrast mode, where box-shadow does not */ border-color: var(--ink); box-shadow: 0 0 0 3px color-mix(in srgb, var(--signal) 45%, transparent); }
 textarea { min-height: 96px; resize: vertical; }
 form .fine { font-size: .86rem; color: var(--muted); }
 #sent { background: var(--signal); color: var(--on-signal); padding: 12px 14px; border-radius: 8px; font-weight: 500; animation: rise .35s var(--ease) both; }
@@ -339,7 +348,7 @@ footer p { opacity: .7; max-width: 46em; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   a.phone svg, .open-now i, .hero-bg, .hero-fig img, .hero-fig::before { animation: none !important; }
-  .hero .wrap > div > *, .estimate, .estimate tr, .facts ul, .map iframe, #sent { animation-name: fade !important; }
+  .hero .wrap > div > *, .estimate, .estimate tr, .facts ul, #sent { animation-name: fade !important; }
   .js .rv, .js [data-stagger] > * { transform: none !important; }
   .btn, .cards li, .shots img { translate: none !important; scale: none !important; }
 }
@@ -373,7 +382,7 @@ footer p { opacity: .7; max-width: 46em; }
   .bar .btn::after { content: none; }
 }
 </style>
-<style>:root{--band:#1f2428;--band-2:#39424a;--signal:#ffb000;--on-signal:#1b1300;--display:"Sora",Arial,sans-serif}h1,h2,.brand,form h3{text-transform:none;letter-spacing:-.03em;font-weight:700}h1{font-size:clamp(2rem,4.8vw,3.3rem);line-height:1.1}h2{line-height:1.14}.brand{font-size:1.2rem}.hero::before{display:none}.hero .wrap{max-width:none;padding:0;grid-template-columns:1fr 1fr;gap:0;align-items:stretch}.hero .wrap>div{align-self:center;padding:clamp(52px,7vw,100px) clamp(24px,5vw,72px) clamp(104px,11vw,140px) max(20px,calc(50vw - 540px))}.hero-fig{margin:0;position:relative;min-height:440px;overflow:hidden}.hero-fig img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:zoom 16s ease-out both}@keyframes zoom{from{scale:1.1}}.hero-fig::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--band),transparent 35%)}@media(max-width:900px){.hero .wrap{grid-template-columns:1fr}.hero .wrap>div{padding:44px 20px 36px}.hero-fig{min-height:280px}.hero-fig::after{background:linear-gradient(180deg,var(--band),transparent 35%)}}:root{--r:0;--edge:var(--ink)}.hero,.contact,footer{--edge:var(--on-band)}form,.bar{--edge:var(--ink)}.top{background:var(--signal);color:var(--on-signal);border-bottom:2px solid var(--ink)}.top nav a{opacity:1}.top nav a::after{background:var(--on-signal)}.phone{background:var(--ink);color:var(--bg);border-radius:0}h1,h2{text-transform:uppercase;letter-spacing:-.01em}h2{font-size:clamp(2.2rem,5.5vw,3.6rem);line-height:1}.btn{border-radius:0;border:2px solid var(--edge);box-shadow:4px 4px 0 var(--edge);transition:translate .15s,box-shadow .15s,background .2s}.btn.primary{background:var(--signal);color:var(--on-signal)}.btn.primary:hover,.btn.ghost:hover{translate:2px 2px;box-shadow:2px 2px 0 var(--edge)}.btn.ghost{background:var(--surface);color:var(--ink)}.hero .btn.ghost{background:transparent;color:inherit}.hero h1{font-size:clamp(2.6rem,6.4vw,5.6rem);line-height:.92;overflow-wrap:normal}.hero::after{display:block;height:14px}.notice{border-left-width:6px}.facts ul{border:2px solid var(--edge);box-shadow:6px 6px 0 var(--edge);border-radius:0}.facts li+li{border-left:2px solid var(--edge)}.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:22px}.cards li{display:block;border:2px solid var(--edge);box-shadow:5px 5px 0 var(--edge);border-radius:0;padding:22px}.cards li:hover{translate:-2px -2px;box-shadow:7px 7px 0 var(--edge);border-color:var(--edge)}.cards .ico{display:grid;place-items:center;width:50px;height:50px;background:var(--signal);border:2px solid var(--edge);margin-bottom:16px;padding:0}.cards .ico svg{color:var(--on-signal)}.cards h3{font:700 1.2rem/1.25 var(--display);text-transform:uppercase}.cards .more{background:var(--ink);color:var(--bg);grid-column:1/-1}.cards .more a{border-bottom-color:var(--signal)}.why{background:var(--signal);color:var(--on-signal)}.why .wrap{grid-template-columns:1fr}.why-head{position:static}.why .art{display:none}.why ul{display:grid;grid-template-columns:1fr 1fr;gap:20px}.why li,.why li:last-child,.why li:nth-last-child(-n+2){border:2px solid var(--on-signal);padding:22px;background:color-mix(in srgb,var(--on-signal) 6%,transparent)}.why li svg{color:var(--on-signal)}.why li p{opacity:.85}.why li h3{text-transform:uppercase;font-weight:700}.prices{border:2px solid var(--edge);box-shadow:6px 6px 0 var(--edge);border-radius:0}.prices td{border-bottom-width:2px}.prices td:last-child{font:700 1.3rem var(--display)}.estimate{border:2px solid var(--edge);box-shadow:5px 5px 0 var(--edge);border-radius:0}.alt{background:var(--bg);border-block:2px solid var(--edge)}.steps{gap:22px}.steps li{border:2px solid var(--edge);box-shadow:5px 5px 0 var(--edge);padding:22px;background:var(--surface)}.steps .ico{display:grid;place-items:center;width:50px;height:50px;background:var(--signal);border:2px solid var(--edge)}.steps .ico svg{color:var(--on-signal)}.steps h3{text-transform:uppercase;font-weight:700}.shots div,.shots figure{border:2px solid var(--edge);border-radius:0}.faq details{border:2px solid var(--edge);margin-top:14px;padding:0 18px;background:var(--surface)}.faq details:first-of-type{margin-top:26px;border-top:2px solid var(--edge)}.faq details[open]{box-shadow:5px 5px 0 var(--edge)}.faq summary::after{color:var(--ink)}.faq details p{padding-right:0}form{border:2px solid var(--edge);box-shadow:8px 8px 0 var(--signal);border-radius:0}input,textarea{border:2px solid var(--edge);border-radius:0}form h3{text-transform:uppercase}.map{border:2px dashed color-mix(in srgb,var(--on-band) 35%,transparent);border-radius:0}#sent{border-radius:0;border:2px solid var(--ink)}footer{border-top:6px solid var(--signal)}.bar{background:var(--signal);border-top:2px solid var(--ink)}@media(max-width:900px){.facts li+li{border-left:0;border-top:2px solid var(--edge)}.why ul{grid-template-columns:1fr}}</style>
+<style>:root{--band:#1f2428;--band-2:#39424a;--signal:#ffb000;--on-signal:#1b1300;--display:"Sora",Arial,sans-serif}h1,h2,.brand,form h3{text-transform:none;letter-spacing:-.03em;font-weight:700}h1{font-size:clamp(2rem,4.8vw,3.3rem);line-height:1.1}h2{line-height:1.14}.brand{font-size:1.2rem}.hero::before{display:none}.hero .wrap{max-width:none;padding:0;grid-template-columns:1fr 1fr;gap:0;align-items:stretch}.hero .wrap>div{align-self:center;padding:clamp(52px,7vw,100px) clamp(24px,5vw,72px) clamp(104px,11vw,140px) max(20px,calc(50vw - 540px))}.hero-fig{margin:0;position:relative;min-height:440px;overflow:hidden}.hero-fig img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:zoom 16s ease-out both}@keyframes zoom{from{scale:1.1}}.hero-fig::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--band),transparent 35%)}@media(max-width:900px){.hero .wrap{grid-template-columns:1fr}.hero .wrap>div{padding:44px 20px 36px}.hero-fig{min-height:280px}.hero-fig::after{background:linear-gradient(180deg,var(--band),transparent 35%)}}:root{--r:0;--edge:var(--ink)}.hero,.contact,footer{--edge:var(--on-band)}form,.bar{--edge:var(--ink)}.top{background:var(--signal);color:var(--on-signal);border-bottom:2px solid var(--ink)}.top nav a{opacity:1}.top nav a::after{background:var(--on-signal)}.phone{background:var(--ink);color:var(--bg);border-radius:0}h1,h2{text-transform:uppercase;letter-spacing:-.01em}h2{font-size:clamp(2.2rem,5.5vw,3.6rem);line-height:1}.btn{border-radius:0;border:2px solid var(--edge);box-shadow:4px 4px 0 var(--edge);transition:translate .15s,box-shadow .15s,background .2s}.btn.primary{background:var(--signal);color:var(--on-signal)}.btn.primary:hover,.btn.ghost:hover{translate:2px 2px;box-shadow:2px 2px 0 var(--edge)}.btn.ghost{background:var(--surface);color:var(--ink)}.hero .btn.ghost{background:transparent;color:inherit}.hero h1{font-size:clamp(2.6rem,6.4vw,5.6rem);line-height:.92;overflow-wrap:normal}.hero::after{display:block;height:14px}.notice{border-left-width:6px}.facts ul{border:2px solid var(--edge);box-shadow:6px 6px 0 var(--edge);border-radius:0}.facts li+li{border-left:2px solid var(--edge)}.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:22px}.cards li{display:block;border:2px solid var(--edge);box-shadow:5px 5px 0 var(--edge);border-radius:0;padding:22px}.cards li:hover{translate:-2px -2px;box-shadow:7px 7px 0 var(--edge);border-color:var(--edge)}.cards .ico{display:grid;place-items:center;width:50px;height:50px;background:var(--signal);border:2px solid var(--edge);margin-bottom:16px;padding:0}.cards .ico svg{color:var(--on-signal)}.cards h3{font:700 1.2rem/1.25 var(--display);text-transform:uppercase}.cards .more{background:var(--ink);color:var(--bg);grid-column:1/-1}.cards .more a{border-bottom-color:var(--signal)}.why{background:var(--signal);color:var(--on-signal)}.why .wrap{grid-template-columns:1fr}.why-head{position:static}.why .art{display:none}.why ul{display:grid;grid-template-columns:1fr 1fr;gap:20px}.why li,.why li:last-child,.why li:nth-last-child(-n+2){border:2px solid var(--on-signal);padding:22px;background:color-mix(in srgb,var(--on-signal) 6%,transparent)}.why li svg{color:var(--on-signal)}.why li p{opacity:.85}.why li h3{text-transform:uppercase;font-weight:700}.prices{border:2px solid var(--edge);box-shadow:6px 6px 0 var(--edge);border-radius:0}.prices td{border-bottom-width:2px}.prices td:last-child{font:700 1.3rem var(--display)}.estimate{border:2px solid var(--edge);box-shadow:5px 5px 0 var(--edge);border-radius:0}.alt{background:var(--bg);border-block:2px solid var(--edge)}.steps{gap:22px}.steps li{border:2px solid var(--edge);box-shadow:5px 5px 0 var(--edge);padding:22px;background:var(--surface)}.steps .ico{display:grid;place-items:center;width:50px;height:50px;background:var(--signal);border:2px solid var(--edge)}.steps .ico svg{color:var(--on-signal)}.steps h3{text-transform:uppercase;font-weight:700}.shots div,.shots figure{border:2px solid var(--edge);border-radius:0}.faq details{border:2px solid var(--edge);margin-top:14px;padding:0 18px;background:var(--surface)}.faq details:first-of-type{margin-top:26px;border-top:2px solid var(--edge)}.faq details[open]{box-shadow:5px 5px 0 var(--edge)}.faq summary::after{color:var(--ink)}.faq details p{padding-right:0}form{border:2px solid var(--edge);box-shadow:8px 8px 0 var(--signal);border-radius:0}input,textarea{border:2px solid var(--edge);border-radius:0}form h3{text-transform:uppercase}.map:not([data-geo]):not(.plain){border:2px dashed color-mix(in srgb,var(--on-band) 35%,transparent);border-radius:0}#sent{border-radius:0;border:2px solid var(--ink)}footer{border-top:6px solid var(--signal)}.bar{background:var(--signal);border-top:2px solid var(--ink)}@media(max-width:900px){.facts li+li{border-left:0;border-top:2px solid var(--edge)}.why ul{grid-template-columns:1fr}}</style>
 <script>if (/[?&]still/.test(location.search)) document.documentElement.className = 'still'; else if ('IntersectionObserver' in window) document.documentElement.className = 'js';</script>
 </head>
 <body>
@@ -406,7 +415,7 @@ footer p { opacity: .7; max-width: 46em; }
   <symbol id="chat" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></symbol>
 </svg>
 
-<div class="demo-note"><div class="wrap"><span>Paraugs būvfirmas mājaslapai. Nosaukumu, cenas, foto un kontaktus nomainu pret jūsu.</span> <a href="../">Kas to veidoja un citi paraugi</a></div></div>
+<div class="demo-note"><div class="wrap"><span>Paraugs būvfirmas mājaslapai. Nosaukumu, cenas, foto un kontaktus nomainīšu pret jūsējiem.</span> <a href="../">Kas to veidoja un citi paraugi</a></div></div>
 
 <header class="top" id="sakums">
   <div class="wrap">
@@ -503,7 +512,7 @@ footer p { opacity: .7; max-width: 46em; }
       <li><span class="ico"><svg class="i"><use href="#doc"/></svg></span><h3>Saņemiet tāmi</h3><p>Apskatām objektu, izskaidrojam, kas jādara, un nosaucam cenu un termiņu. Lēmums paliek jūsu ziņā.</p></li>
       <li><span class="ico"><svg class="i"><use href="#check"/></svg></span><h3>Pieņemiet darbu</h3><p>Kopā apskatām paveikto. Rēķinā ir tas pats, kas tāmē.</p></li>
     </ol>
-    <div class="shots" data-stagger aria-label="Vieta fotogrāfijām">
+    <div class="shots" data-stagger role="group" aria-label="Vieta fotogrāfijām">
       <figure><picture><source type="image/webp" srcset="../assets/foto/jumti-3-s-400.webp 400w, ../assets/foto/jumti-3-s.webp 800w" sizes="(min-width:901px) 560px, 100vw"><img src="../assets/foto/jumti-3-s.jpg" alt="" loading="lazy"></picture></figure>
       <figure><picture><source type="image/webp" srcset="../assets/foto/jumti-1-s-400.webp 400w, ../assets/foto/jumti-1-s.webp 800w" sizes="(min-width:901px) 560px, 100vw"><img src="../assets/foto/jumti-1-s.jpg" alt="" loading="lazy"></picture></figure>
       <div><svg class="i"><use href="#cam"/></svg>Šeit būs jūsu foto</div>
@@ -518,7 +527,7 @@ footer p { opacity: .7; max-width: 46em; }
     <details><summary>Kā notiek objekta apskate?</summary><p>Uzrakstiet, kur atrodas objekts, un vienosimies par laiku. Pēc apskates sagatavojam tāmi.</p></details>
     <details><summary>Cik ātri varat sākt?</summary><p>Atkarīgs no sezonas un darba apjoma. Termiņu nosaucam kopā ar tāmi.</p></details>
     <details><summary>Vai materiālus pērkat jūs?</summary><p>Varam nopirkt mēs vai strādāt ar jūsu materiāliem. Tāmē tas ir norādīts atsevišķi.</p></details>
-    <details><summary>Kas notiek, ja darba laikā atklājas vēl kas?</summary><p>Darbu apturam un piezvanām. Turpinām tikai tad, kad esat piekritis jaunajai cenai.</p></details>
+    <details><summary>Kas notiek, ja darba laikā atklājas vēl kas?</summary><p>Darbu apturam un piezvanām. Turpinām tikai tad, kad apstiprināt jauno cenu.</p></details>
   </div>
 </section>
 
@@ -531,8 +540,8 @@ footer p { opacity: .7; max-width: 46em; }
         <li><svg class="i"><use href="#pin"/></svg><div><small>Adrese</small>Jūsu adrese, Jūsu pilsēta</div></li>
       </ul>
       <div class="hours" id="hours">
-        <div data-d="12345"><span>Pirmdiena–piektdiena</span><span>8.00–18.00</span></div>
-        <div data-d="6"><span>Sestdiena</span><span>9.00–14.00</span></div>
+        <div data-d="12345"><span>Pirmdiena-piektdiena</span><span>8.00-18.00</span></div>
+        <div data-d="6"><span>Sestdiena</span><span>9.00-14.00</span></div>
         <div data-d="0"><span>Svētdiena</span><span>Slēgts</span></div>
       </div>
       <div class="map"><svg class="i"><use href="#pin"/></svg>Šeit būs karte ar jūsu biroja atrašanās vietu</div>
@@ -545,7 +554,7 @@ footer p { opacity: .7; max-width: 46em; }
       <label for="f-msg">Sīkāks apraksts<textarea id="f-msg" name="Ziņa"></textarea></label>
       <button class="btn primary" type="submit">Nosūtīt pieteikumu</button>
       <p class="fine">Atbildēsim tajā pašā darba dienā.</p>
-      <p id="sent" hidden>Demo: īstajā lapā šis pieteikums uzreiz nonāk jūsu e-pastā.</p>
+      <p id="sent" role="status" hidden>Demo: īstajā lapā šis pieteikums uzreiz nonāk jūsu e-pastā.</p>
     </form>
   </div>
 </section>
@@ -617,19 +626,6 @@ if ('IntersectionObserver' in window) {
     });
   }, { rootMargin: '-45% 0px -50% 0px' });
   Object.keys(links).forEach(function (id) { var s = document.getElementById(id); if (s) spy.observe(s); });
-}
-// map: loads when reached (sample) or when the visitor asks for it (client site)
-var map = document.querySelector('.map[data-src]');
-if (map) {
-  var loadMap = function () {
-    var f = document.createElement('iframe');
-    f.title = 'Karte'; f.loading = 'lazy'; f.src = map.dataset.src;
-    map.classList.add('on'); map.insertBefore(f, map.firstChild);
-  };
-  var btn = map.querySelector('button');
-  if (btn) btn.addEventListener('click', function () { btn.remove(); loadMap(); });
-  if (map.hasAttribute('data-auto') && 'IntersectionObserver' in window)
-    new IntersectionObserver(function (es, o) { if (es[0].isIntersecting) { o.disconnect(); if (btn) btn.remove(); loadMap(); } }, { rootMargin: '300px' }).observe(map);
 }
 </script>
 </body>

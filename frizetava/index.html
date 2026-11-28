@@ -2,8 +2,11 @@
 <html lang="lv">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-hwRoyGepKBTipxoMYLaQ4jN7nuRGmBE6e/3n04JPcxI=' 'sha256-skypIQJuKpkLuRUaL6fg6qdID3JCrYI0s18BW8eCbpI='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'self'; object-src 'none'; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Jūsu Frizētava · mājaslapas paraugs</title>
+<meta name="robots" content="index,follow">
 <link rel="canonical" href="https://rvxdevlv.github.io/website-demos/frizetava/">
 <meta name="description" content="Mājaslapas paraugs uzņēmumam Jūsu Frizētava. Cenas un kontakti ir piemēri.">
 <meta name="theme-color" content="#14262b">
@@ -379,15 +382,21 @@ a.phone svg { animation: ring 6s 3s infinite; transform-origin: 50% 60%; }
 .hours .now { color: var(--signal); font-weight: 600; }
 .map { margin-top: 22px; min-height: 120px; background: rgb(255 255 255 / .06); border-radius: var(--r); overflow: hidden; display: grid; place-content: center; justify-items: center; gap: 10px; font-size: .95rem; padding: 14px; text-align: center; }
 .map a { display: inline-flex; align-items: center; gap: 6px; opacity: .85; }
-.map[data-auto] button { display: none; }
-.map.on { display: block; padding: 0; background: none; text-align: left; }
-.map iframe { display: block; width: 100%; height: 270px; border: 0; border-radius: var(--r); background: #dfe5e3; animation: rise .6s var(--ease) both; }
-.map.on a { margin-top: 10px; font-size: .92rem; }
+.map.plain { display: block; min-height: 0; padding: 0; background: none; text-align: left; }
+.map.plain .map-addr { padding-top: 0; justify-content: flex-start; }
+.map[data-geo] { display: block; min-height: 0; padding: 0; background: none; text-align: left; }
+.map a.map-img { position: relative; display: block; aspect-ratio: 2 / 1; border-radius: var(--r); overflow: hidden; background: #dfe3e2; opacity: 1; }
+.map-img img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.map-img .pin { position: absolute; left: 50%; top: 50%; width: 44px; height: 44px; margin: -40px 0 0 -22px; color: var(--signal); fill: #fff; stroke-width: 1.6; filter: drop-shadow(0 2px 3px rgb(0 0 0 / .45)); }
+.map-addr { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 2px 18px; padding-top: 10px; }
+.map-addr span { display: flex; gap: 18px; }
+.map-addr a { min-height: 44px; font-weight: 600; text-underline-offset: 3px; }
+.map .credit { display: block; opacity: .55; font-size: .75rem; text-align: left; justify-self: start; }
 form { display: grid; gap: 14px; min-width: 0; background: var(--surface); color: var(--ink); border-radius: var(--r); padding: 28px; align-self: start; box-shadow: 0 18px 40px rgb(0 0 0 / .22); }
 form h3 { font: 700 1.6rem/1 var(--display); }
 label { font-size: .92rem; font-weight: 500; display: grid; gap: 6px; }
 input, textarea { font: inherit; padding: 12px 13px; border-radius: var(--r); border: 1px solid var(--line); background: var(--bg); color: var(--ink); width: 100%; transition: border-color .15s, box-shadow .15s; }
-input:focus, textarea:focus { outline: none; border-color: var(--ink); box-shadow: 0 0 0 3px color-mix(in srgb, var(--signal) 45%, transparent); }
+input:focus, textarea:focus { outline: 3px solid transparent; /* shows in Windows high-contrast mode, where box-shadow does not */ border-color: var(--ink); box-shadow: 0 0 0 3px color-mix(in srgb, var(--signal) 45%, transparent); }
 textarea { min-height: 96px; resize: vertical; }
 form .fine { font-size: .86rem; color: var(--muted); }
 #sent { background: var(--signal); color: var(--on-signal); padding: 12px 14px; border-radius: 8px; font-weight: 500; animation: rise .35s var(--ease) both; }
@@ -411,7 +420,7 @@ footer p { opacity: .7; max-width: 46em; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   a.phone svg, .open-now i, .hero-bg, .hero-fig img, .hero-fig::before { animation: none !important; }
-  .hero .wrap > div > *, .estimate, .estimate tr, .facts ul, .map iframe, #sent { animation-name: fade !important; }
+  .hero .wrap > div > *, .estimate, .estimate tr, .facts ul, #sent { animation-name: fade !important; }
   .js .rv, .js [data-stagger] > * { transform: none !important; }
   .btn, .cards li, .shots img { translate: none !important; scale: none !important; }
 }
@@ -478,7 +487,7 @@ footer p { opacity: .7; max-width: 46em; }
   <symbol id="chat" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></symbol>
 </svg>
 
-<div class="demo-note"><div class="wrap"><span>Paraugs frizētavas mājaslapai. Nosaukumu, cenas, foto un kontaktus nomainu pret jūsu.</span> <a href="../">Kas to veidoja un citi paraugi</a></div></div>
+<div class="demo-note"><div class="wrap"><span>Paraugs frizētavas mājaslapai. Nosaukumu, cenas, foto un kontaktus nomainīšu pret jūsējiem.</span> <a href="../">Kas to veidoja un citi paraugi</a></div></div>
 
 <header class="top" id="sakums">
   <div class="wrap">
@@ -576,7 +585,7 @@ footer p { opacity: .7; max-width: 46em; }
       <li><span class="ico"><svg class="i"><use href="#doc"/></svg></span><h3>Pārrunājam</h3><p>Uzklausām jūsu vēlmes un nosaucam cenu.</p></li>
       <li><span class="ico"><svg class="i"><use href="#check"/></svg></span><h3>Baudiet rezultātu</h3><p>Aizejat ar frizūru, kādu gribējāt.</p></li>
     </ol>
-    <div class="shots" data-stagger aria-label="Vieta fotogrāfijām">
+    <div class="shots" data-stagger role="group" aria-label="Vieta fotogrāfijām">
       <div><svg class="i"><use href="#cam"/></svg>Šeit būs jūsu darbu foto</div>
       <div><svg class="i"><use href="#cam"/></svg>Salons</div>
       <div><svg class="i"><use href="#cam"/></svg>Komanda</div>
@@ -603,8 +612,8 @@ footer p { opacity: .7; max-width: 46em; }
         <li><svg class="i"><use href="#pin"/></svg><div><small>Adrese</small>Jūsu adrese, Jūsu pilsēta</div></li>
       </ul>
       <div class="hours" id="hours">
-        <div data-d="12345"><span>Pirmdiena–piektdiena</span><span>8.00–18.00</span></div>
-        <div data-d="6"><span>Sestdiena</span><span>9.00–14.00</span></div>
+        <div data-d="12345"><span>Pirmdiena-piektdiena</span><span>8.00-18.00</span></div>
+        <div data-d="6"><span>Sestdiena</span><span>9.00-14.00</span></div>
         <div data-d="0"><span>Svētdiena</span><span>Slēgts</span></div>
       </div>
       <div class="map"><svg class="i"><use href="#pin"/></svg>Šeit būs karte ar jūsu salona atrašanās vietu</div>
@@ -617,7 +626,7 @@ footer p { opacity: .7; max-width: 46em; }
       <label for="f-msg">Kāds pakalpojums vajadzīgs?<textarea id="f-msg" name="Ziņa"></textarea></label>
       <button class="btn primary" type="submit">Nosūtīt pieteikumu</button>
       <p class="fine">Atbildēsim tajā pašā darba dienā.</p>
-      <p id="sent" hidden>Demo: īstajā lapā šis pieteikums uzreiz nonāk jūsu e-pastā.</p>
+      <p id="sent" role="status" hidden>Demo: īstajā lapā šis pieteikums uzreiz nonāk jūsu e-pastā.</p>
     </form>
   </div>
 </section>
@@ -689,19 +698,6 @@ if ('IntersectionObserver' in window) {
     });
   }, { rootMargin: '-45% 0px -50% 0px' });
   Object.keys(links).forEach(function (id) { var s = document.getElementById(id); if (s) spy.observe(s); });
-}
-// map: loads when reached (sample) or when the visitor asks for it (client site)
-var map = document.querySelector('.map[data-src]');
-if (map) {
-  var loadMap = function () {
-    var f = document.createElement('iframe');
-    f.title = 'Karte'; f.loading = 'lazy'; f.src = map.dataset.src;
-    map.classList.add('on'); map.insertBefore(f, map.firstChild);
-  };
-  var btn = map.querySelector('button');
-  if (btn) btn.addEventListener('click', function () { btn.remove(); loadMap(); });
-  if (map.hasAttribute('data-auto') && 'IntersectionObserver' in window)
-    new IntersectionObserver(function (es, o) { if (es[0].isIntersecting) { o.disconnect(); if (btn) btn.remove(); loadMap(); } }, { rootMargin: '300px' }).observe(map);
 }
 </script>
 </body>

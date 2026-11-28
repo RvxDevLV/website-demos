@@ -5,7 +5,11 @@
   python3 _src/build.py --preview <slug> ...   build business demos into privats/preview/ to look at them unpublished
 
 Business data lives in the private privats/shops.py (never committed)."""
-import html, json, pathlib, re, runpy, shutil, sys, urllib.parse, zlib
+import html, json, os, pathlib, re, runpy, shutil, sys, urllib.parse, zlib
+from maps import finish_map
+from security import harden
+from counter import CODE as COUNTER_CODE, host as counter_host, inject as add_counter
+CREDIT = '<small class="credit"><a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">Karte © OpenStreetMap</a></small>'
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 TPL = (ROOT / "_src" / "autoserviss.html").read_text(encoding="utf-8")
@@ -32,6 +36,9 @@ SHOPS = [
 GENERIC = {s[0] for s in SHOPS}
 # private folder: inside the repo folder (git-excluded) or next to it
 PRIV = ROOT / "privats" if (ROOT / "privats").is_dir() else ROOT.parent / "privats"
+_CJ = pathlib.Path(os.environ.get("COUNTER_JSON") or PRIV / "counter.json")  # opens counter for the business demos, off while this file is missing (see _src/counter.py)
+COUNTER = (json.loads(_CJ.read_text(encoding="utf-8")).get("code") or "") if _CJ.exists() else ""
+assert not COUNTER or COUNTER_CODE.fullmatch(COUNTER), "privats/counter.json: bad code"
 _PRIVATE = PRIV / "shops.py"
 if _PRIVATE.exists():
     SHOPS += runpy.run_path(str(_PRIVATE))["SHOPS"]
@@ -50,9 +57,9 @@ def nice_tel(t):
 
 
 def hours_html(h):
-    """Group consecutive days with the same hours: Pirmdiena–piektdiena 8.00–17.00."""
+    """Group consecutive days with the same hours: Pirmdiena-piektdiena 8.00-17.00."""
     rows, order = [], [1, 2, 3, 4, 5, 6, 0]
-    val = {d: re.sub(r"(^|–)0(\d)", r"\1\2", h[str(d)]) if str(d) in h else "Slēgts" for d in order}
+    val = {d: re.sub(r"(^|[-–])0(\d)", r"\1\2", h[str(d)]).replace("–", "-") if str(d) in h else "Slēgts" for d in order}
     for d in order:
         if rows and rows[-1][2] == val[d]:
             rows[-1][1] = d
@@ -61,7 +68,7 @@ def hours_html(h):
     out = []
     for a, b, v in rows:
         days = "".join(str(x) for x in order[order.index(a):order.index(b) + 1])
-        label = DAYNAMES[a] if a == b else f"{DAYNAMES[a]}–{DAYNAMES[b].lower()}"
+        label = DAYNAMES[a] if a == b else f"{DAYNAMES[a]}-{DAYNAMES[b].lower()}"
         out.append(f'        <div data-d="{days}"><span>{label}</span><span>{v}</span></div>')
     return "\n".join(out)
 
@@ -86,15 +93,16 @@ def real_info(page, info, ld):
     q = ",".join(map(str, info["geo"])) if info.get("geo") else info.get("addr", "")
     if q:
         url = "https://www.google.com/maps/search/?api=1&amp;query=" + urllib.parse.quote(q)
-        attr = btn = ""
-        if info.get("geo"):  # the sample loads the map when scrolled to; the client site only on a click (see make_live)
-            la, lo = info["geo"]
-            attr = (f' data-auto data-src="https://www.openstreetmap.org/export/embed.html?bbox={lo - .011:.5f}%2C{la - .0055:.5f}%2C{lo + .011:.5f}%2C{la + .0055:.5f}'
-                    f'&amp;layer=mapnik&amp;marker={la:.5f}%2C{lo:.5f}"')
-            btn = '<button type="button" class="btn ghost">Rādīt karti</button>'
-        page = re.sub(r'<div class="map">.*?</div>', lambda m: f'<div class="map"{attr}>{btn}<a href="{url}" target="_blank" rel="noopener"><svg class="i"><use href="#pin"/></svg>Atvērt Google kartē</a></div>', page, count=1, flags=re.S)
-        if info.get("geo"):
-            ld["geo"] = {"@type": "GeoCoordinates", "latitude": info["geo"][0], "longitude": info["geo"][1]}
+        shown = re.sub(r"\s*\([^)]*\)", "", info.get("addr") or "")
+        geo = info.get("geo")
+        img = ('<a class="map-img" href="%s" target="_blank" rel="noopener" aria-label="Atvērt Google kartē"><img src="karte.webp" alt="Karte: %s" width="1000" height="500" loading="lazy">'
+               '<svg class="i pin"><use href="#pin"/></svg></a>' % (url, html.escape(shown))) if geo else ""
+        route = ('<a href="https://www.google.com/maps/dir/?api=1&amp;destination=%s" target="_blank" rel="noopener">Maršruts</a>' % urllib.parse.quote(q))
+        credit = CREDIT if geo else ""
+        data = ' data-geo="%s,%s"' % tuple(geo) if geo else ""
+        page = re.sub(r'<div class="map">.*?</div>', lambda m: f'<div class="map{"" if geo else " plain"}"{data}>{img}<div class="map-addr">{f"<b>{html.escape(shown)}</b>" if geo else ""}<span><a href="{url}" target="_blank" rel="noopener">Atvērt Google kartē</a>{route}</span></div>{credit}</div>', page, count=1, flags=re.S)
+        if geo:
+            ld["geo"] = {"@type": "GeoCoordinates", "latitude": geo[0], "longitude": geo[1]}
     page = page.replace("Teksti, cenas, tālrunis un adrese ir piemēri, tos nomainīšu pret jūsējiem.",
                         "Adrese, tālrunis un darba laiks ir no publiskā uzņēmumu kataloga. Teksti un cenas ir piemēri, tos nomainīšu pret jūsējiem.")
     page = page.replace("Tā nav uzņēmuma oficiālā mājaslapa, un teksti, cenas un kontakti ir piemēri.",
@@ -115,6 +123,8 @@ def self_host_fonts(page, out, shared=None):
         css = urllib.request.urlopen(urllib.request.Request(html.unescape(href), headers=ua), timeout=30).read().decode()
         for u in re.findall(r"url\((https://fonts\.gstatic\.com/[^)]+)\)", css):
             fn = re.sub(r"[^\w.]+", "_", u.split("/s/", 1)[-1])
+            if not fn.endswith(".woff2"):  # Google sometimes serves /l/font?kit=… addresses with no file name
+                fn = "kit_" + str(zlib.crc32(u.encode())) + ".woff2"
             f = cache / fn
             if not f.exists():
                 f.write_bytes(urllib.request.urlopen(urllib.request.Request(u, headers=ua), timeout=30).read())
@@ -168,7 +178,7 @@ def make_live(page, name, cfg, out):
     e = html.escape
     page = re.sub(r'<div class="demo-note">.*?</div></div>\n', "", page, count=1, flags=re.S)
     page = re.sub(r'<section class="owner">.*?</section>\n', "", page, count=1, flags=re.S)
-    page = page.replace(" · mājaslapas paraugs</title>", "</title>").replace('<meta name="robots" content="noindex">\n', "")
+    page = page.replace(" · mājaslapas paraugs</title>", "</title>").replace('<meta name="robots" content="noindex">\n', '<meta name="robots" content="index,follow">\n')
     page = re.sub(r'<meta name="description" content="[^"]*">', f'<meta name="description" content="{e(name)}: pakalpojumi, cenas, darba laiks un kontakti.">', page)
     if cfg.get("domain"):
         page = page.replace("</title>", f'</title>\n<link rel="canonical" href="https://{cfg["domain"]}/">', 1)
@@ -176,15 +186,14 @@ def make_live(page, name, cfg, out):
     page = page.replace('<form id="req" class="rv">', '<form id="req" class="rv">\n      <input type="hidden" name="access_key" value="%s">\n'
                         '      <input type="hidden" name="subject" value="Jauns pieteikums no mājaslapas">\n'
                         '      <input type="checkbox" name="botcheck" hidden tabindex="-1" autocomplete="off">' % e(cfg["form_key"]))
-    page = page.replace('<p id="sent" hidden>', '<p class="fine">Datus izmantojam tikai, lai atbildētu uz pieteikumu. <a href="privatums.html">Privātuma politika</a></p>\n      <p id="sent" hidden>')
+    page = page.replace('<p id="sent" role="status" hidden>', '<p class="fine">Datus izmantojam tikai, lai atbildētu uz pieteikumu. <a href="privatums.html">Privātuma politika</a></p>\n      <p id="sent" role="status" hidden>')
     page = re.sub(r"document\.getElementById\('req'\)\.addEventListener\('submit'.*?\n\}\);", lambda m: LIVE_JS, page, count=1, flags=re.S)
-    page = page.replace('<div class="map" data-auto ', '<div class="map" ')
     for fn in set(re.findall(r'\.\./assets/foto/([\w-]+\.jpg)', page)):
         (out / "foto").mkdir(exist_ok=True)
         shutil.copy(ROOT / "assets" / "foto" / fn, out / "foto" / fn)
     page = page.replace("../assets/foto/", "foto/")
     page = self_host_fonts(page, out)
-    files = {"privatums.html": PRIVACY.format(maps=" Karte tiek ielādēta no OpenStreetMap tikai tad, ja nospiežat «Rādīt karti»." if 'class="map" data-src' in page else "",
+    files = {"privatums.html": PRIVACY.format(maps=" Karte ir attēls, kas glabājas šajā pašā lapā." if 'class="map" data-geo' in page else "",
                                               name=e(name), date=datetime.date.today().strftime("%d.%m.%Y"),
                                               company=e(cfg.get("company", name)), regnr=f", reģ. nr. {e(cfg['regnr'])}" if cfg.get("regnr") else "",
                                               email=e(cfg["email"]))}
@@ -240,15 +249,15 @@ PROFILES = {
     "evak": ("Evakuators", "Evakuators, kad auto <em>vairs nebrauc</em>",
         "Piezvaniet, un uzreiz pateiksim cenu un pēc cik ilga laika būsim klāt. Aizvedam uz servisu vai mājām.",
         [("Izsaukums pilsētā", "40,00"), ("Ceļš ārpus pilsētas, 20 km", "20,00"), ("Iekraušana un nostiprināšana", "0,00"), ("Kopā ar PVN", "60,00")],
-        None, "Cenu piemēri. Precīzu cenu nosaucam pa telefonu, pirms izbraucam.",
+        None, "Cenu piemēri. Precīzu cenu nosaucam pa tālruni, pirms izbraucam.",
         [("Evakuācija pilsētā", "", "no 40 €"), ("Evakuācija ārpus pilsētas", "Par katru kilometru", "no 1 €/km"),
          ("Akumulatora palaišana", "", "no 20 €"), ("Riepas maiņa uz ceļa", "", "no 20 €"),
          ("Izvilkšana no grāvja", "Atkarīgs no vietas", "pēc vienošanās")]),
     "riepas": ("Riepu serviss", "Riepu maiņa <em>bez rindas</em>",
         "Piesakieties uz konkrētu laiku, un jums nav jāgaida. Cenu zināt jau pirms ierašanās.",
         [("Riepu maiņa, 4 riteņi", "24,00"), ("Balansēšana, 4 riteņi", "16,00"), ("Riepu spiediena pārbaude", "0,00"), ("Kopā ar PVN", "40,00")],
-        WINTER, "Cenu piemēri vieglajām automašīnām. Citai tehnikai cenu nosaucam pa telefonu.",
-        [("Riepu maiņa ar balansēšanu, R13–R15", "4 riteņi", "no 30 €"), ("Riepu maiņa ar balansēšanu, R16–R18", "4 riteņi", "no 40 €"),
+        WINTER, "Cenu piemēri vieglajām automašīnām. Citai tehnikai cenu nosaucam pa tālruni.",
+        [("Riepu maiņa ar balansēšanu, R13-R15", "4 riteņi", "no 30 €"), ("Riepu maiņa ar balansēšanu, R16-R18", "4 riteņi", "no 40 €"),
          ("Riepas remonts", "", "no 10 €"), ("Sezonas riepu glabāšana", "4 riepas, viena sezona", "no 25 €"),
          ("Kravas auto riepas montāža", "Viens ritenis", "no 20 €")]),
     "virsbuve": ("Virsbūves remonts un krāsošana", "Virsbūve <em>kā no jauna</em>",
@@ -577,7 +586,7 @@ SKIN_CSS = {
         '.faq details:first-of-type{margin-top:26px;border-top:2px solid var(--edge)}.faq details[open]{box-shadow:5px 5px 0 var(--edge)}'
         '.faq summary::after{color:var(--ink)}.faq details p{padding-right:0}'
         'form{border:2px solid var(--edge);box-shadow:8px 8px 0 var(--signal);border-radius:0}input,textarea{border:2px solid var(--edge);border-radius:0}'
-        'form h3{text-transform:uppercase}.map{border:2px dashed color-mix(in srgb,var(--on-band) 35%,transparent);border-radius:0}'
+        'form h3{text-transform:uppercase}.map:not([data-geo]):not(.plain){border:2px dashed color-mix(in srgb,var(--on-band) 35%,transparent);border-radius:0}'
         '#sent{border-radius:0;border:2px solid var(--ink)}footer{border-top:6px solid var(--signal)}'
         '.bar{background:var(--signal);border-top:2px solid var(--ink)}'
         '@media(max-width:900px){.facts li+li{border-left:0;border-top:2px solid var(--edge)}.why ul{grid-template-columns:1fr}}'),
@@ -852,7 +861,7 @@ EXTRA = {
     "zobi": dict(
         ld='Dentist', generic='Paraugs zobārstniecības mājaslapai.',
         swaps=[('Kad salūst auto, cilvēki meklē', 'Kad sāp zobs, cilvēki meklē'), ('Pirms brauciena cilvēks grib redzēt, ka serviss ir īsts un ko tas dara.', 'Pirms vizītes cilvēks grib redzēt, ka prakse ir īsta, un zināt cenas.'), ('Tāme pirms darba</li>', 'Plāns pirms ārstēšanas</li>'), ('Tāmes paraugs', 'Ārstēšanas plāna paraugs'), ('Šādu tāmi saņemat pirms darba. Gala rēķins to nepārsniedz bez jūsu piekrišanas.', 'Plānu un izmaksas saņemat pirms ārstēšanas. Bez jūsu piekrišanas nekas netiek darīts.'), ('Ja vajadzīgā darba sarakstā nav, piezvaniet.', 'Ja vajadzīgā nav sarakstā, uzrakstiet vai piezvaniet.'), ('Godīgi, saprotami, laikā', 'Saudzīgi, saprotami, laikā'), ('<h3>Tāme pirms darba</h3><p>Cenu zināt, pirms atstājat atslēgas. Bez jūsu piekrišanas tā nemainās.</p>', '<h3>Plāns pirms ārstēšanas</h3><p>Zināt, kas tiks darīts un cik tas maksās, pirms sēžaties krēslā.</p>'), ('<h3>Skaidrojam vienkārši</h3><p>Pasakām, kas jādara tagad un kas var pagaidīt līdz nākamajai reizei.</p>', '<h3>Skaidrojam vienkārši</h3><p>Pastāstām, kas jāārstē tagad un kas var pagaidīt.</p>'), ('<h3>Turam termiņus</h3><p>Nosaucam, kad auto būs gatavs, un paziņojam, ja kas mainās.</p>', '<h3>Cienām jūsu laiku</h3><p>Pieņemam pēc pieraksta, lai nebūtu jāgaida rindā.</p>'), ('<h3>Parādām paveikto</h3><p>Nomainītās detaļas varat apskatīt, saņemot auto.</p>', '<h3>Akūtas sāpes</h3><p>Zvaniet, meklēsim tuvāko brīvo laiku.</p>'), ('Saņemt tāmi savam auto', 'Pieteikt vizīti'), ('<h3>Piesakieties</h3><p>Zvaniet vai aizpildiet pieteikumu. Atbildam tajā pašā darba dienā un vienojamies par laiku.</p>', '<h3>Piesakieties</h3><p>Zvaniet vai aizpildiet pieteikumu. Atbildam tajā pašā darba dienā un piedāvājam laiku.</p>'), ('<h3>Saņemiet tāmi</h3><p>Apskatām auto, izskaidrojam, kas jādara, un nosaucam cenu. Lēmums paliek jūsu ziņā.</p>', '<h3>Saņemiet plānu</h3><p>Pēc apskates izskaidrojam, kas jādara, un nosaucam izmaksas. Lēmums paliek jūsu ziņā.</p>'), ('<h3>Saņemiet auto</h3><p>Paziņojam, kad auto gatavs. Rēķinā ir tas pats, kas tāmē.</p>', '<h3>Ārstēšana</h3><p>Ārstēšana notiek pēc saskaņotā plāna. Rēķinā ir tas pats, kas plānā.</p>'), ('Šeit būs jūsu servisa foto', 'Šeit būs jūsu prakses foto'), ('>Darbnīca<', '>Kabinets<'), ('jūsu servisa atrašanās vietu', 'jūsu prakses atrašanās vietu'), ('Auto marka, modelis un gads<input id="f-car" placeholder="Piemēram, VW Golf, 2014">', 'Vēlamais laiks<input id="f-car" placeholder="Piemēram, darba dienās pēc 17.00">'), ('Kas jāizdara?', 'Kas jūs satrauc?')],
-        faq=[('Vai jāpiesakās iepriekš?', 'Jā, pieņemam pēc pieraksta. Akūtu sāpju gadījumā zvaniet, meklēsim tuvāko brīvo laiku.'), ('Cik maksās ārstēšana?', 'Atkarīgs no tā, kas jādara. Pēc apskates saņemat plānu ar izmaksām un tikai tad izlemjat.'), ('Ko darīt, ja ir bail no zobārsta?', 'Pasakiet to piesakoties. Strādājam nesteidzīgi un pirms katra soļa izskaidrojam, kas notiks.'), ('Cik bieži jānāk uz pārbaudi?', 'Parasti reizi pusgadā vai gadā. Pēc apskates ieteiksim, kas piemērots jums.')]),
+        faq=[('Vai jāpiesakās iepriekš?', 'Jā, pieņemam pēc pieraksta. Akūtu sāpju gadījumā zvaniet, meklēsim tuvāko brīvo laiku.'), ('Cik maksās ārstēšana?', 'Atkarīgs no tā, kas jādara. Pēc apskates saņemat plānu ar izmaksām un tikai tad izlemjat.'), ('Ko darīt, ja ir bail no zobārsta?', 'Pasakiet to, piesakoties. Strādājam nesteidzīgi un pirms katra soļa izskaidrojam, kas notiks.'), ('Cik bieži jānāk uz pārbaudi?', 'Parasti reizi pusgadā vai gadā. Pēc apskates ieteiksim, kas piemērots jums.')]),
     "beres": dict(
         ld='LocalBusiness', generic='Paraugs apbedīšanas biroja mājaslapai.',
         swaps=[('Kad salūst auto, cilvēki meklē', 'Kad aiziet tuvinieks, cilvēki meklē'), ('Pirms brauciena cilvēks grib redzēt, ka serviss ir īsts un ko tas dara.', 'Grūtā brīdī cilvēks grib uzreiz redzēt tālruni, pakalpojumus un izmaksas.'), ('Pieteikt vizīti', 'Sazināties'), ('Tāme pirms darba</li>', 'Skaidras izmaksas</li>'), ('Skaidras cenas</li>', 'Palīdzam ar dokumentiem</li>'), ('Atbilde tajā pašā darba dienā</li>', 'Visi darbi vienuviet</li>'), ('Tāmes paraugs', 'Izmaksu paraugs'), ('Šādu tāmi saņemat pirms darba. Gala rēķins to nepārsniedz bez jūsu piekrišanas.', 'Izmaksas nosaucam uzreiz un pilnībā, bez slēptām pozīcijām.'), ('Ja vajadzīgā darba sarakstā nav, piezvaniet. Pateiksim uzreiz, vai varam palīdzēt.', 'Ja vajadzīgā nav sarakstā, piezvaniet. Pastāstīsim, kā varam palīdzēt.'), ('Godīgi, saprotami, laikā', 'Ar cieņu, mierīgi, bez steigas'), ('<h3>Tāme pirms darba</h3><p>Cenu zināt, pirms atstājat atslēgas. Bez jūsu piekrišanas tā nemainās.</p>', '<h3>Skaidras izmaksas</h3><p>Visu summu zināt iepriekš. Papildu rēķinu pēc bērēm nav.</p>'), ('<h3>Skaidrojam vienkārši</h3><p>Pasakām, kas jādara tagad un kas var pagaidīt līdz nākamajai reizei.</p>', '<h3>Izskaidrojam, kas jādara</h3><p>Pastāstām, kādi dokumenti vajadzīgi un kādā secībā viss notiek.</p>'), ('<h3>Turam termiņus</h3><p>Nosaucam, kad auto būs gatavs, un paziņojam, ja kas mainās.</p>', '<h3>Viss vienuviet</h3><p>Jums nav jāmeklē vairāki uzņēmumi. Saskaņojam visu vienā sarunā.</p>'), ('<h3>Parādām paveikto</h3><p>Nomainītās detaļas varat apskatīt, saņemot auto.</p>', '<h3>Ar cieņu</h3><p>Atvadas organizējam tā, kā to vēlas tuvinieki.</p>'), ('<p class="kicker">Cenrādis</p>\n      <h2>Cenas</h2>', '<p class="kicker">Cenrādis</p>\n      <h2>Pakalpojumi un cenas</h2>'), ('Saņemt tāmi savam auto', 'Uzzināt izmaksas'), ('<h3>Piesakieties</h3><p>Zvaniet vai aizpildiet pieteikumu. Atbildam tajā pašā darba dienā un vienojamies par laiku.</p>', '<h3>Piezvaniet</h3><p>Pastāstiet, kas noticis. Izskaidrosim, kas jādara vispirms.</p>'), ('<h3>Saņemiet tāmi</h3><p>Apskatām auto, izskaidrojam, kas jādara, un nosaucam cenu. Lēmums paliek jūsu ziņā.</p>', '<h3>Vienojamies</h3><p>Kopā izvēlamies visu nepieciešamo un nosaucam pilnas izmaksas.</p>'), ('<h3>Saņemiet auto</h3><p>Paziņojam, kad auto gatavs. Rēķinā ir tas pats, kas tāmē.</p>', '<h3>Mēs nokārtojam</h3><p>Uzņemamies organizēšanu, lai jūs varētu būt kopā ar tuviniekiem.</p>'), ('Šeit būs jūsu servisa foto', 'Šeit būs jūsu biroja foto'), ('>Darbnīca<', '>Atvadu zāle<'), ('>Komanda<', '>Transports<'), ('jūsu servisa atrašanās vietu', 'jūsu biroja atrašanās vietu'), ('Auto marka, modelis un gads<input id="f-car" placeholder="Piemēram, VW Golf, 2014">', 'Kad jums piezvanīt?<input id="f-car" placeholder="Piemēram, šodien pēc 15.00">'), ('Kas jāizdara?', 'Kā varam palīdzēt?'), ('Atbildēsim tajā pašā darba dienā.', 'Atbildēsim, cik ātri vien iespējams.')],
@@ -864,11 +873,11 @@ EXTRA = {
     "vet": dict(
         ld='VeterinaryCare', generic='Paraugs veterinārās klīnikas mājaslapai.',
         swaps=[('Kad salūst auto, cilvēki meklē', 'Kad saslimst mīlulis, cilvēki meklē'), ('Pirms brauciena cilvēks grib redzēt, ka serviss ir īsts un ko tas dara.', 'Pirms vizītes cilvēks grib redzēt darba laiku, cenas un tālruni.'), ('Tāme pirms darba</li>', 'Izmaksas zināmas iepriekš</li>'), ('Tāmes paraugs', 'Vizītes paraugs'), ('Šādu tāmi saņemat pirms darba. Gala rēķins to nepārsniedz bez jūsu piekrišanas.', 'Izmaksas nosaucam pirms ārstēšanas. Bez jūsu piekrišanas nekas netiek darīts.'), ('Ja vajadzīgā darba sarakstā nav, piezvaniet.', 'Ja vajadzīgā nav sarakstā, uzrakstiet vai piezvaniet.'), ('Godīgi, saprotami, laikā', 'Saudzīgi, saprotami, laikā'), ('<h3>Tāme pirms darba</h3><p>Cenu zināt, pirms atstājat atslēgas. Bez jūsu piekrišanas tā nemainās.</p>', '<h3>Izmaksas iepriekš</h3><p>Pēc apskates pasakām, kas jādara un cik tas maksās.</p>'), ('<h3>Skaidrojam vienkārši</h3><p>Pasakām, kas jādara tagad un kas var pagaidīt līdz nākamajai reizei.</p>', '<h3>Skaidrojam vienkārši</h3><p>Pastāstām, kas mīlulim kaiš un kā par viņu rūpēties mājās.</p>'), ('<h3>Turam termiņus</h3><p>Nosaucam, kad auto būs gatavs, un paziņojam, ja kas mainās.</p>', '<h3>Pēc pieraksta</h3><p>Mazāk gaidīšanas un mazāk stresa dzīvniekam.</p>'), ('<h3>Parādām paveikto</h3><p>Nomainītās detaļas varat apskatīt, saņemot auto.</p>', '<h3>Steidzamie gadījumi</h3><p>Zvaniet, pateiksim, cik ātri varam pieņemt.</p>'), ('Saņemt tāmi savam auto', 'Pieteikt vizīti'), ('<h3>Piesakieties</h3><p>Zvaniet vai aizpildiet pieteikumu. Atbildam tajā pašā darba dienā un vienojamies par laiku.</p>', '<h3>Piesakieties</h3><p>Zvaniet vai aizpildiet pieteikumu. Atbildam tajā pašā darba dienā un piedāvājam laiku.</p>'), ('<h3>Saņemiet tāmi</h3><p>Apskatām auto, izskaidrojam, kas jādara, un nosaucam cenu. Lēmums paliek jūsu ziņā.</p>', '<h3>Apskate</h3><p>Izmeklējam dzīvnieku, izskaidrojam, kas jādara, un nosaucam izmaksas. Lēmums paliek jūsu ziņā.</p>'), ('<h3>Saņemiet auto</h3><p>Paziņojam, kad auto gatavs. Rēķinā ir tas pats, kas tāmē.</p>', '<h3>Ārstēšana</h3><p>Ārstējam pēc saskaņotā plāna un pastāstām, kā rūpēties mājās.</p>'), ('Šeit būs jūsu servisa foto', 'Šeit būs jūsu klīnikas foto'), ('>Darbnīca<', '>Kabinets<'), ('jūsu servisa atrašanās vietu', 'jūsu klīnikas atrašanās vietu'), ('Auto marka, modelis un gads<input id="f-car" placeholder="Piemēram, VW Golf, 2014">', 'Dzīvnieks un vecums<input id="f-car" placeholder="Piemēram, kaķis, 3 gadi">'), ('Kas jāizdara?', 'Kas noticis?')],
-        faq=[('Vai jāpiesakās iepriekš?', 'Vēlams. Steidzamos gadījumos zvaniet, pateiksim, cik ātri varam pieņemt.'), ('Cik maksā vakcinācija?', 'Atkarīgs no vakcīnas. Cenu nosaucam piesakoties.'), ('Kas jāņem līdzi uz vizīti?', 'Dzīvnieka pasi vai vakcinācijas apliecību, ja tāda ir.'), ('Vai braucat arī mājas vizītēs?', 'Piezvaniet vai uzrakstiet, un pastāstīsim par iespējām.')]),
+        faq=[('Vai jāpiesakās iepriekš?', 'Vēlams. Steidzamos gadījumos zvaniet, pateiksim, cik ātri varam pieņemt.'), ('Cik maksā vakcinācija?', 'Atkarīgs no vakcīnas. Cenu nosaucam, piesakoties.'), ('Kas jāņem līdzi uz vizīti?', 'Dzīvnieka pasi vai vakcinācijas apliecību, ja tāda ir.'), ('Vai braucat arī mājas vizītēs?', 'Piezvaniet vai uzrakstiet, un pastāstīsim par iespējām.')]),
     "buve": dict(
         ld="GeneralContractor", generic="Paraugs būvfirmas mājaslapai.",
         swaps=[('Kad salūst auto, cilvēki meklē', 'Kad vajag meistaru, cilvēki meklē'), ('Pirms brauciena cilvēks grib redzēt, ka serviss ir īsts un ko tas dara.', 'Pirms zvana cilvēks grib redzēt paveiktos darbus un saprast cenu līmeni.'), ('Pieteikt vizīti', 'Saņemt tāmi'), ('<h3>Tāme pirms darba</h3><p>Cenu zināt, pirms atstājat atslēgas. Bez jūsu piekrišanas tā nemainās.</p>', '<h3>Tāme pirms darba</h3><p>Cenu zināt, pirms sākam. Bez jūsu piekrišanas tā nemainās.</p>'), ('<h3>Turam termiņus</h3><p>Nosaucam, kad auto būs gatavs, un paziņojam, ja kas mainās.</p>', '<h3>Turam termiņus</h3><p>Nosaucam, kad darbs būs pabeigts, un paziņojam, ja kas mainās.</p>'), ('<h3>Parādām paveikto</h3><p>Nomainītās detaļas varat apskatīt, saņemot auto.</p>', '<h3>Sakopjam aiz sevis</h3><p>Objektu nododam tīru un būvgružus aizvedam.</p>'), ('Saņemt tāmi savam auto', 'Saņemt tāmi savam objektam'), ('<h3>Piesakieties</h3><p>Zvaniet vai aizpildiet pieteikumu. Atbildam tajā pašā darba dienā un vienojamies par laiku.</p>', '<h3>Piesakieties</h3><p>Zvaniet vai aizpildiet pieteikumu. Atbildam tajā pašā darba dienā un vienojamies par apskati.</p>'), ('<h3>Saņemiet tāmi</h3><p>Apskatām auto, izskaidrojam, kas jādara, un nosaucam cenu. Lēmums paliek jūsu ziņā.</p>', '<h3>Saņemiet tāmi</h3><p>Apskatām objektu, izskaidrojam, kas jādara, un nosaucam cenu un termiņu. Lēmums paliek jūsu ziņā.</p>'), ('<h3>Saņemiet auto</h3><p>Paziņojam, kad auto gatavs. Rēķinā ir tas pats, kas tāmē.</p>', '<h3>Pieņemiet darbu</h3><p>Kopā apskatām paveikto. Rēķinā ir tas pats, kas tāmē.</p>'), ('Šeit būs jūsu servisa foto', 'Šeit būs jūsu darbu foto'), ('>Darbnīca<', '>Objekts<'), ('jūsu servisa atrašanās vietu', 'jūsu biroja atrašanās vietu'), ('Auto marka, modelis un gads<input id="f-car" placeholder="Piemēram, VW Golf, 2014">', 'Kas jādara un kur?<input id="f-car" placeholder="Piemēram, jumta maiņa, Cēsis">'), ('Kas jāizdara?', 'Sīkāks apraksts')],
-        faq=[('Kā notiek objekta apskate?', 'Uzrakstiet, kur atrodas objekts, un vienosimies par laiku. Pēc apskates sagatavojam tāmi.'), ('Cik ātri varat sākt?', 'Atkarīgs no sezonas un darba apjoma. Termiņu nosaucam kopā ar tāmi.'), ('Vai materiālus pērkat jūs?', 'Varam nopirkt mēs vai strādāt ar jūsu materiāliem. Tāmē tas ir norādīts atsevišķi.'), ('Kas notiek, ja darba laikā atklājas vēl kas?', 'Darbu apturam un piezvanām. Turpinām tikai tad, kad esat piekritis jaunajai cenai.')]),
+        faq=[('Kā notiek objekta apskate?', 'Uzrakstiet, kur atrodas objekts, un vienosimies par laiku. Pēc apskates sagatavojam tāmi.'), ('Cik ātri varat sākt?', 'Atkarīgs no sezonas un darba apjoma. Termiņu nosaucam kopā ar tāmi.'), ('Vai materiālus pērkat jūs?', 'Varam nopirkt mēs vai strādāt ar jūsu materiāliem. Tāmē tas ir norādīts atsevišķi.'), ('Kas notiek, ja darba laikā atklājas vēl kas?', 'Darbu apturam un piezvanām. Turpinām tikai tad, kad apstiprināt jauno cenu.')]),
 }
 
 # trade-specific card texts, checked before the general list
@@ -1066,7 +1075,7 @@ for slug, name, loc, town, services, term, *rest in SHOPS:
     generic = not loc
     drawing = art(var.get("art") or ART_BY.get(prof, "car"))
     e = html.escape
-    note = (extra.get("generic", "Paraugs autoservisa mājaslapai.") + " Nosaukumu, cenas, foto un kontaktus nomainu pret jūsu."
+    note = (extra.get("generic", "Paraugs autoservisa mājaslapai.") + " Nosaukumu, cenas, foto un kontaktus nomainīšu pret jūsējiem."
             if generic else
             f"Šis paraugs ir sagatavots tieši uzņēmumam «{e(name)}». Teksti, cenas, tālrunis un adrese ir piemēri, tos nomainīšu pret jūsējiem.")
     CARD_LI = ("<li><b>Kartīte un mājaslapa kopā</b><span>Jūsu uzņēmuma kartīte Google meklētājā jau ir. Mājaslapas saiti var ielikt kartītē, lai cilvēks uzreiz redzētu jūsu pakalpojumus un cenas.</span></li>"
@@ -1079,11 +1088,11 @@ for slug, name, loc, town, services, term, *rest in SHOPS:
   <ul>
     <li><b>Jūs atrod Google</b><span>Kad salūst auto, cilvēki meklē “{e(term)}”. Bez mājaslapas šie klienti aizbrauc pie tiem, kurus atrod. Lapā jūsu nosaukums, pilsēta un pakalpojumi ir norādīti arī meklētājam saprotamā veidā.</span></li>
     {CARD_LI}
-    <li><b>Mazāk zvanu “cik maksā?”</b><span>Cenas un darba laiks ir redzami, tāpēc zvana tie, kas grib pieteikties.</span></li>
+    <li><b>Mazāk zvanu ar jautājumu “cik maksā?”</b><span>Cenas un darba laiks ir redzami, tāpēc zvana tie, kas grib pieteikties.</span></li>
     <li><b>Pieteikumi arī vakaros</b><span>Forma strādā brīvdienās un pēc darba laika, kad telefonu neceļat.</span></li>
     <li><b>Jauni klienti uzticas ātrāk</b><span>Pirms brauciena cilvēks grib redzēt, ka serviss ir īsts un ko tas dara.</span></li>
   </ul>
-  <p class="next">Ja paraugs jums šķiet noderīgs, lūdzu, atbildiet uz manu e-pastu un norādiet, ko vēlaties mainīt. Paraugā var mainīt jebko, arī tekstus, krāsas, attēlus un izkārtojumu, un es to pielāgošu jūsu vēlmēm. Gatavu mājaslapu publicēšu internetā kā gatavu mājaslapu. Pirmajiem pieciem klientiem to daru bez maksas, lūdzot pretī tikai godīgu atsauksmi. Ja jums ir jautājumi par to, kā notiek sadarbība, labprāt jums piezvanīšu.</p>
+  <p class="next">Ja paraugs jums šķiet noderīgs, lūdzu, atbildiet uz manu e-pastu un norādiet, ko vēlaties mainīt. Paraugā var mainīt jebko, arī tekstus, krāsas, attēlus un izkārtojumu, un es to pielāgošu jūsu vēlmēm. Gatavu mājaslapu publicēšu internetā. Pirmajiem pieciem klientiem to daru bez maksas, lūdzot pretī tikai godīgu atsauksmi. Ja jums ir jautājumi par to, kā notiek sadarbība, labprāt jums piezvanīšu.</p>
   <p class="below">Jūsu lapas paraugs sākas šeit</p>
 </div></div></section>
 """
@@ -1132,7 +1141,7 @@ for slug, name, loc, town, services, term, *rest in SHOPS:
         page = real_info(page, INFO[slug], ldd)
     hrs = INFO.get(slug, {}).get("hours")
     if hrs:
-        ldd["openingHours"] = [f'{["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"][int(d)]} {v.replace(".", ":")}' for d, v in hrs.items()]
+        ldd["openingHours"] = [f'{["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"][int(d)]} {v.replace(".", ":").replace("–", "-")}' for d, v in hrs.items()]
     _jsonld = "" if generic else '<script type="application/ld+json">' + json.dumps(ldd, ensure_ascii=False).replace("</", "<\\/") + "</script>\n"
     _page_base = page
     for _v in range(VARIANTS_N if PREVIEW else 1):
@@ -1144,7 +1153,7 @@ for slug, name, loc, town, services, term, *rest in SHOPS:
             page = page.replace(' <a href="../">Kas to veidoja un citi paraugi</a>', "").replace(' <a href="../">Par autoru un citi paraugi</a>', "")
         page = page.replace("{{JSONLD}}", _jsonld)
         if generic:  # the eight sample sites are public and indexed; business demos stay noindex
-            page = page.replace('<meta name="robots" content="noindex">', f'<link rel="canonical" href="https://rvxdevlv.github.io/website-demos/{slug}/">', 1)
+            page = page.replace('<meta name="robots" content="noindex">', f'<meta name="robots" content="index,follow">\n<link rel="canonical" href="https://rvxdevlv.github.io/website-demos/{slug}/">', 1)
         if LIVE:
             out = ROOT.parent / "klienti" / slug
             out.mkdir(parents=True, exist_ok=True)
@@ -1156,6 +1165,12 @@ for slug, name, loc, town, services, term, *rest in SHOPS:
             out.mkdir(parents=True, exist_ok=True)
             if not PREVIEW:  # published samples: no render-blocking request to Google Fonts
                 page = self_host_fonts(page, out, ROOT / "assets" / "fonts")
+        page = finish_map(page, out, PRIV / "tiles-cache")
+        counted = bool(COUNTER) and not PREVIEW and not generic and not LIVE  # only the private business demos are counted
+        if counted:
+            page = add_counter(page, COUNTER)
+        if not PREVIEW:  # previews still load Google Fonts, so they cannot run under the policy
+            page = harden(page, private=not generic and not LIVE, img_hosts=(counter_host(COUNTER),) if counted else ())
         (out / "index.html").write_text(page, encoding="utf-8")
         print("built", _vslug, "(live version in ../klienti)" if LIVE else "(preview only)" if PREVIEW else "")
     if PREVIEW and VARIANTS_N > 1:

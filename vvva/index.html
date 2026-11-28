@@ -2,12 +2,14 @@
 <html lang="lv">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-hwRoyGepKBTipxoMYLaQ4jN7nuRGmBE6e/3n04JPcxI=' 'sha256-skypIQJuKpkLuRUaL6fg6qdID3JCrYI0s18BW8eCbpI='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'self'; object-src 'none'; upgrade-insecure-requests">
+<meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>VVVA · mājaslapas paraugs</title>
 <meta name="robots" content="noindex">
 <meta name="description" content="Mājaslapas paraugs uzņēmumam VVVA. Cenas un kontakti ir piemēri.">
 <meta name="theme-color" content="#14262b">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "AutoRepair", "name": "VVVA", "address": {"@type": "PostalAddress", "addressLocality": "Jelgava", "addressCountry": "LV", "streetAddress": "Aviācijas 12A, Jelgava, LV-3002"}, "makesOffer": [{"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Kravas auto remonts"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Autobusu remonts"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Metināšana"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Radiatoru remonts"}}], "telephone": "+37129130677", "geo": {"@type": "GeoCoordinates", "latitude": 56.6577107082, "longitude": 23.7661343512}, "openingHours": ["Mo 08:00–17:00", "Tu 08:00–17:00", "We 08:00–17:00", "Th 08:00–17:00", "Fr 08:00–17:00"]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "AutoRepair", "name": "VVVA", "address": {"@type": "PostalAddress", "addressLocality": "Jelgava", "addressCountry": "LV", "streetAddress": "Aviācijas 12A, Jelgava, LV-3002"}, "makesOffer": [{"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Kravas auto remonts"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Autobusu remonts"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Metināšana"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Radiatoru remonts"}}], "telephone": "+37129130677", "geo": {"@type": "GeoCoordinates", "latitude": 56.6577107082, "longitude": 23.7661343512}, "openingHours": ["Mo 08:00-17:00", "Tu 08:00-17:00", "We 08:00-17:00", "Th 08:00-17:00", "Fr 08:00-17:00"]}</script>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2314262b'/%3E%3Cpath d='M9 22 22 9M9 9h13v13' fill='none' stroke='%23f2b705' stroke-width='3.5'/%3E%3C/svg%3E">
 <style>
 /* vietnamese */
@@ -332,15 +334,21 @@ a.phone svg { animation: ring 6s 3s infinite; transform-origin: 50% 60%; }
 .hours .now { color: var(--signal); font-weight: 600; }
 .map { margin-top: 22px; min-height: 120px; background: rgb(255 255 255 / .06); border-radius: var(--r); overflow: hidden; display: grid; place-content: center; justify-items: center; gap: 10px; font-size: .95rem; padding: 14px; text-align: center; }
 .map a { display: inline-flex; align-items: center; gap: 6px; opacity: .85; }
-.map[data-auto] button { display: none; }
-.map.on { display: block; padding: 0; background: none; text-align: left; }
-.map iframe { display: block; width: 100%; height: 270px; border: 0; border-radius: var(--r); background: #dfe5e3; animation: rise .6s var(--ease) both; }
-.map.on a { margin-top: 10px; font-size: .92rem; }
+.map.plain { display: block; min-height: 0; padding: 0; background: none; text-align: left; }
+.map.plain .map-addr { padding-top: 0; justify-content: flex-start; }
+.map[data-geo] { display: block; min-height: 0; padding: 0; background: none; text-align: left; }
+.map a.map-img { position: relative; display: block; aspect-ratio: 2 / 1; border-radius: var(--r); overflow: hidden; background: #dfe3e2; opacity: 1; }
+.map-img img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.map-img .pin { position: absolute; left: 50%; top: 50%; width: 44px; height: 44px; margin: -40px 0 0 -22px; color: var(--signal); fill: #fff; stroke-width: 1.6; filter: drop-shadow(0 2px 3px rgb(0 0 0 / .45)); }
+.map-addr { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 2px 18px; padding-top: 10px; }
+.map-addr span { display: flex; gap: 18px; }
+.map-addr a { min-height: 44px; font-weight: 600; text-underline-offset: 3px; }
+.map .credit { display: block; opacity: .55; font-size: .75rem; text-align: left; justify-self: start; }
 form { display: grid; gap: 14px; min-width: 0; background: var(--surface); color: var(--ink); border-radius: var(--r); padding: 28px; align-self: start; box-shadow: 0 18px 40px rgb(0 0 0 / .22); }
 form h3 { font: 700 1.6rem/1 var(--display); }
 label { font-size: .92rem; font-weight: 500; display: grid; gap: 6px; }
 input, textarea { font: inherit; padding: 12px 13px; border-radius: var(--r); border: 1px solid var(--line); background: var(--bg); color: var(--ink); width: 100%; transition: border-color .15s, box-shadow .15s; }
-input:focus, textarea:focus { outline: none; border-color: var(--ink); box-shadow: 0 0 0 3px color-mix(in srgb, var(--signal) 45%, transparent); }
+input:focus, textarea:focus { outline: 3px solid transparent; /* shows in Windows high-contrast mode, where box-shadow does not */ border-color: var(--ink); box-shadow: 0 0 0 3px color-mix(in srgb, var(--signal) 45%, transparent); }
 textarea { min-height: 96px; resize: vertical; }
 form .fine { font-size: .86rem; color: var(--muted); }
 #sent { background: var(--signal); color: var(--on-signal); padding: 12px 14px; border-radius: 8px; font-weight: 500; animation: rise .35s var(--ease) both; }
@@ -364,7 +372,7 @@ footer p { opacity: .7; max-width: 46em; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   a.phone svg, .open-now i, .hero-bg, .hero-fig img, .hero-fig::before { animation: none !important; }
-  .hero .wrap > div > *, .estimate, .estimate tr, .facts ul, .map iframe, #sent { animation-name: fade !important; }
+  .hero .wrap > div > *, .estimate, .estimate tr, .facts ul, #sent { animation-name: fade !important; }
   .js .rv, .js [data-stagger] > * { transform: none !important; }
   .btn, .cards li, .shots img { translate: none !important; scale: none !important; }
 }
@@ -440,11 +448,11 @@ footer p { opacity: .7; max-width: 46em; }
   <ul>
     <li><b>Jūs atrod Google</b><span>Kad salūst auto, cilvēki meklē “kravas auto remonts Jelgava”. Bez mājaslapas šie klienti aizbrauc pie tiem, kurus atrod. Lapā jūsu nosaukums, pilsēta un pakalpojumi ir norādīti arī meklētājam saprotamā veidā.</span></li>
     <li><b>Kartīte un mājaslapa kopā</b><span>Jūsu uzņēmuma kartīte Google meklētājā jau ir. Mājaslapas saiti var ielikt kartītē, lai cilvēks uzreiz redzētu jūsu pakalpojumus un cenas.</span></li>
-    <li><b>Mazāk zvanu “cik maksā?”</b><span>Cenas un darba laiks ir redzami, tāpēc zvana tie, kas grib pieteikties.</span></li>
+    <li><b>Mazāk zvanu ar jautājumu “cik maksā?”</b><span>Cenas un darba laiks ir redzami, tāpēc zvana tie, kas grib pieteikties.</span></li>
     <li><b>Pieteikumi arī vakaros</b><span>Forma strādā brīvdienās un pēc darba laika, kad telefonu neceļat.</span></li>
     <li><b>Jauni klienti uzticas ātrāk</b><span>Pirms brauciena cilvēks grib redzēt, ka serviss ir īsts un ko tas dara.</span></li>
   </ul>
-  <p class="next">Ja paraugs jums šķiet noderīgs, lūdzu, atbildiet uz manu e-pastu un norādiet, ko vēlaties mainīt. Paraugā var mainīt jebko, arī tekstus, krāsas, attēlus un izkārtojumu, un es to pielāgošu jūsu vēlmēm. Gatavu mājaslapu publicēšu internetā kā gatavu mājaslapu. Pirmajiem pieciem klientiem to daru bez maksas, lūdzot pretī tikai godīgu atsauksmi. Ja jums ir jautājumi par to, kā notiek sadarbība, labprāt jums piezvanīšu.</p>
+  <p class="next">Ja paraugs jums šķiet noderīgs, lūdzu, atbildiet uz manu e-pastu un norādiet, ko vēlaties mainīt. Paraugā var mainīt jebko, arī tekstus, krāsas, attēlus un izkārtojumu, un es to pielāgošu jūsu vēlmēm. Gatavu mājaslapu publicēšu internetā. Pirmajiem pieciem klientiem to daru bez maksas, lūdzot pretī tikai godīgu atsauksmi. Ja jums ir jautājumi par to, kā notiek sadarbība, labprāt jums piezvanīšu.</p>
   <p class="below">Jūsu lapas paraugs sākas šeit</p>
 </div></div></section>
 <header class="top" id="sakums">
@@ -542,7 +550,7 @@ footer p { opacity: .7; max-width: 46em; }
       <li><span class="ico"><svg class="i"><use href="#doc"/></svg></span><h3>Saņemiet tāmi</h3><p>Apskatām auto, izskaidrojam, kas jādara, un nosaucam cenu. Lēmums paliek jūsu ziņā.</p></li>
       <li><span class="ico"><svg class="i"><use href="#check"/></svg></span><h3>Saņemiet auto</h3><p>Paziņojam, kad auto gatavs. Rēķinā ir tas pats, kas tāmē.</p></li>
     </ol>
-    <div class="shots" data-stagger aria-label="Vieta fotogrāfijām">
+    <div class="shots" data-stagger role="group" aria-label="Vieta fotogrāfijām">
       <div><svg class="i"><use href="#cam"/></svg>Šeit būs jūsu servisa foto</div>
       <div><svg class="i"><use href="#cam"/></svg>Darbnīca</div>
       <div><svg class="i"><use href="#cam"/></svg>Komanda</div>
@@ -553,10 +561,10 @@ footer p { opacity: .7; max-width: 46em; }
 <section>
   <div class="wrap faq rv">
     <h2>Jautājumi un atbildes</h2>
-    <details><summary>Vai jāpiesakās iepriekš?</summary><p>Vēlams. Tā varam ieplānot laiku un jums nav jāgaida rindā. Steidzamos gadījumos zvaniet, meklēsim risinājumu.</p></details>
+    <details><summary>Vai jāpiesakās iepriekš?</summary><p>Vēlams. Tā varam ieplānot laiku, un jums nav jāgaida rindā. Steidzamos gadījumos zvaniet, meklēsim risinājumu.</p></details>
     <details><summary>Vai varu atvest savas detaļas?</summary><p>Jā. Pirms pirkšanas ieteicams piezvanīt, lai pārliecinātos, ka detaļa der jūsu auto.</p></details>
     <details><summary>Cik ilgi notiek remonts?</summary><p>Atkarīgs no darba un detaļu piegādes. Termiņu nosaucam kopā ar tāmi.</p></details>
-    <details><summary>Kas notiek, ja remonta laikā atklājas vēl kas?</summary><p>Darbu apturam un piezvanām. Turpinām tikai tad, kad esat piekritis jaunajai cenai.</p></details>
+    <details><summary>Kas notiek, ja remonta laikā atklājas vēl kas?</summary><p>Darbu apturam un piezvanām. Turpinām tikai pēc tam, kad apstiprināt jauno cenu.</p></details>
   </div>
 </section>
 
@@ -569,10 +577,10 @@ footer p { opacity: .7; max-width: 46em; }
         <li><svg class="i"><use href="#pin"/></svg><div><small>Adrese</small>Aviācijas 12A, Jelgava, LV-3002</div></li>
       </ul>
       <div class="hours" id="hours">
-        <div data-d="12345"><span>Pirmdiena–piektdiena</span><span>8.00–17.00</span></div>
-        <div data-d="60"><span>Sestdiena–svētdiena</span><span>Slēgts</span></div>
+        <div data-d="12345"><span>Pirmdiena-piektdiena</span><span>8.00-17.00</span></div>
+        <div data-d="60"><span>Sestdiena-svētdiena</span><span>Slēgts</span></div>
       </div>
-      <div class="map" data-auto data-src="https://www.openstreetmap.org/export/embed.html?bbox=23.75513%2C56.65221%2C23.77713%2C56.66321&amp;layer=mapnik&amp;marker=56.65771%2C23.76613"><button type="button" class="btn ghost">Rādīt karti</button><a href="https://www.google.com/maps/search/?api=1&amp;query=56.6577107082%2C23.7661343512" target="_blank" rel="noopener"><svg class="i"><use href="#pin"/></svg>Atvērt Google kartē</a></div>
+      <div class="map" data-geo="56.6577107082,23.7661343512"><a class="map-img" href="https://www.google.com/maps/search/?api=1&amp;query=56.6577107082%2C23.7661343512" target="_blank" rel="noopener" aria-label="Atvērt Google kartē"><img src="karte.webp" alt="Karte: Aviācijas 12A, Jelgava, LV-3002" width="1000" height="500" loading="lazy"><svg class="i pin"><use href="#pin"/></svg></a><div class="map-addr"><b>Aviācijas 12A, Jelgava, LV-3002</b><span><a href="https://www.google.com/maps/search/?api=1&amp;query=56.6577107082%2C23.7661343512" target="_blank" rel="noopener">Atvērt Google kartē</a><a href="https://www.google.com/maps/dir/?api=1&amp;destination=56.6577107082%2C23.7661343512" target="_blank" rel="noopener">Maršruts</a></span></div><small class="credit"><a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">Karte © OpenStreetMap</a></small></div>
     </div>
     <form id="req" class="rv">
       <h3>Uzrakstiet mums</h3>
@@ -582,7 +590,7 @@ footer p { opacity: .7; max-width: 46em; }
       <label for="f-msg">Kas jāizdara?<textarea id="f-msg" name="Ziņa"></textarea></label>
       <button class="btn primary" type="submit">Nosūtīt pieteikumu</button>
       <p class="fine">Atbildēsim tajā pašā darba dienā.</p>
-      <p id="sent" hidden>Demo: īstajā lapā šis pieteikums uzreiz nonāk jūsu e-pastā.</p>
+      <p id="sent" role="status" hidden>Demo: īstajā lapā šis pieteikums uzreiz nonāk jūsu e-pastā.</p>
     </form>
   </div>
 </section>
@@ -654,19 +662,6 @@ if ('IntersectionObserver' in window) {
     });
   }, { rootMargin: '-45% 0px -50% 0px' });
   Object.keys(links).forEach(function (id) { var s = document.getElementById(id); if (s) spy.observe(s); });
-}
-// map: loads when reached (sample) or when the visitor asks for it (client site)
-var map = document.querySelector('.map[data-src]');
-if (map) {
-  var loadMap = function () {
-    var f = document.createElement('iframe');
-    f.title = 'Karte'; f.loading = 'lazy'; f.src = map.dataset.src;
-    map.classList.add('on'); map.insertBefore(f, map.firstChild);
-  };
-  var btn = map.querySelector('button');
-  if (btn) btn.addEventListener('click', function () { btn.remove(); loadMap(); });
-  if (map.hasAttribute('data-auto') && 'IntersectionObserver' in window)
-    new IntersectionObserver(function (es, o) { if (es[0].isIntersecting) { o.disconnect(); if (btn) btn.remove(); loadMap(); } }, { rootMargin: '300px' }).observe(map);
 }
 </script>
 </body>
